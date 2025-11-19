@@ -1835,6 +1835,35 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+  - react-native-simple-toast (3.3.2):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Toast (~> 4)
+    - Yoga
   - React-NativeModulesApple (0.81.1):
     - boost
     - DoubleConversion
@@ -2694,6 +2723,7 @@ PODS:
     - SocketRocket
     - Yoga
   - SocketRocket (0.7.1)
+  - Toast (4.1.1)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2739,6 +2769,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -2781,6 +2812,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - SocketRocket
+    - Toast
 
 EXTERNAL SOURCES:
   boost:
@@ -2866,6 +2898,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-simple-toast:
+    :path: "../node_modules/react-native-simple-toast"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2983,6 +3017,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 91e0eab42a6ae7f3e34091a126d70fc53bd3823e
   React-microtasksnativemodule: 1ead4fe154df3b1ba34b5a9e35ef3c4bdfa72ccb
   react-native-safe-area-context: c6e2edd1c1da07bdce287fa9d9e60c5f7b514616
+  react-native-simple-toast: e3add86605446b2c4fb2f77884ef7040c36817d2
   React-NativeModulesApple: eff2eba56030eb0d107b1642b8f853bc36a833ac
   React-oscompat: b12c633e9c00f1f99467b1e0e0b8038895dae436
   React-perflogger: 58d12c4e5df1403030c97b9c621375c312cca454
@@ -3020,6 +3055,7 @@ SPEC CHECKSUMS:
   RNSVG: 6c39befcfad06eec55b40c19a030b2d9eca63334
   RNWorklets: ad0606bee2a8103c14adb412149789c60b72bfb2
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
+  Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
   Yoga: 11c9686a21e2cd82a094a723649d9f4507200fb0
 
 PODFILE CHECKSUM: 6842ecc47fa76b0ecc3697b606850aa88293c5bb

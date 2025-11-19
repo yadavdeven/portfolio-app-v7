@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import {DEVICE_WIDTH} from '../../constants/Dimensions';
-import {dynamicHeight} from '../../utils/layout';
+import { Image, StyleSheet, View } from 'react-native';
+import { DEVICE_WIDTH } from '../../constants/Dimensions';
+import { moderateScale } from 'react-native-size-matters';
 
 export default function LoginHeader() {
   return (
@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: DEVICE_WIDTH * 0.6,
-    height: dynamicHeight(42),
+    height: moderateScale(36),
   },
 });

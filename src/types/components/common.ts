@@ -1,6 +1,6 @@
 export interface ButtonStandardProps {
   btnLabel: string;
-  marginTop: number;
+  marginTop?: number;
   onPress: () => void;
   btnWidth?: number | `${number}%` | undefined;
 }

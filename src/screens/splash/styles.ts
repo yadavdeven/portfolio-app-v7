@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { dynamicHeight } from '../../utils/layout';
+import { moderateScale } from 'react-native-size-matters';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: '65%',
-    height: dynamicHeight(60),
+    width: '60%',
+    height: moderateScale(68, 0.1),
   },
 });
 

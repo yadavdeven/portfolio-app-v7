@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
-import {Image} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {ROUTES} from '../../navigation/routes';
-import {navigate} from '../../navigation/navigation-utils';
+import React, { useEffect } from 'react';
+import { Image, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ROUTES } from '../../navigation/routes';
+import { navigate } from '../../navigation/navigation-utils';
 import styles from './styles';
 
 export default function SplashScreen() {
@@ -17,6 +17,7 @@ export default function SplashScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
       <Image
         resizeMode="contain"
         source={require('../../assets/images/global/logo_full.png')}

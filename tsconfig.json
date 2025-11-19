@@ -3,7 +3,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "src/types/env.d.ts"   // 👈 add this line
+    "src/types/env.d.ts",
+    "src/types/svg.d.ts"
   ],
   "exclude": ["**/node_modules", "**/Pods"]
 }

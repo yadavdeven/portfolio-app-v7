@@ -1,4 +1,26 @@
 import { BASE_API_URL } from '@env';
+import * as Keychain from 'react-native-keychain';
+
+export const saveAuthCredentials = async (
+  userId: string,
+  token: string,
+  guid: string,
+) => {
+  try {
+    const data = { token, guid };
+
+    await Keychain.setGenericPassword(userId, JSON.stringify(data), {
+      service: 'auth_credentials',
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+    });
+
+    console.log('User ID, token, and GUID saved securely');
+  } catch (error) {
+    console.log('Error saving credentials to keychain:', error);
+    throw error;
+  }
+};
 
 const makeApiRequestPreLogin = async (
   endpoint: string,
@@ -22,16 +44,25 @@ const makeApiRequestPreLogin = async (
   try {
     const response = await fetch(url, options);
 
+    const responseJson = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message || `Request failed with status ${response.status}`,
-      );
+      const errorMessage =
+        responseJson?.message ||
+        `Request failed with status ${responseJson.status}`;
+
+      throw new Error(errorMessage);
     }
 
-    return response.json();
+    const responseData = responseJson?.responseData;
+    if (responseData) {
+      const { id, token, guid } = responseData;
+      await saveAuthCredentials(id, token, guid);
+    }
+    return responseJson;
   } catch (error: any) {
-    throw new Error(error.message || 'Something went wrong');
+    console.log('inside catch', error);
+    throw new Error(error?.message || 'Something went wrong');
   }
 };
 

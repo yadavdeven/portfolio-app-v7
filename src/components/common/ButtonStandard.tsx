@@ -1,24 +1,25 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ButtonStandardProps} from '../../types/components/common';
-import {UIActivityIndicator} from 'react-native-indicators';
-import {DEVICE_WIDTH} from '../../constants/Dimensions';
-import {useAppSelector} from '../../store/hooks';
-import {dynamicHeight} from '../../utils/layout';
-import {FONTS} from '../../utils/typography';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ButtonStandardProps } from '../../types/components/common';
+import { UIActivityIndicator } from 'react-native-indicators';
+import { DEVICE_WIDTH } from '../../constants/Dimensions';
+import { useAppSelector } from '../../store/hooks';
+import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
+import { moderateScale } from 'react-native-size-matters';
 
 export default function ButtonStandard({
   btnLabel,
-  marginTop = 0,
+  marginTop = moderateScale(24),
   onPress,
   btnWidth,
 }: ButtonStandardProps) {
-  const {isAppLoading} = useAppSelector(state => state.app);
+  const { isAppLoading } = useAppSelector(state => state.app);
   return (
     <TouchableOpacity
-      style={[styles.btn, {width: btnWidth, marginTop}]}
-      onPress={onPress}>
+      style={[styles.btn, { width: btnWidth, marginTop }]}
+      onPress={onPress}
+    >
       {isAppLoading && <View style={styles.loaderWrapper} />}
       <Text style={styles.btnText}>{btnLabel}</Text>
       {isAppLoading && (
@@ -26,7 +27,7 @@ export default function ButtonStandard({
           <UIActivityIndicator
             color="white"
             count={12}
-            size={dynamicHeight(18)}
+            size={moderateScale(14)}
           />
         </View>
       )}
@@ -37,8 +38,7 @@ export default function ButtonStandard({
 const styles = StyleSheet.create({
   btn: {
     width: DEVICE_WIDTH * 0.9,
-    maxWidth: 600,
-    height: dynamicHeight(50),
+    height: moderateScale(40, 0.4),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.primary,
@@ -53,11 +53,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     columnGap: DEVICE_WIDTH * 0.02,
+    borderWidth: 1,
+    borderColor: Colors.bg_600,
   },
   btnText: {
-    fontSize: dynamicHeight(20),
-    color: Colors.white,
+    fontSize: moderateScale(16),
     fontFamily: FONTS.lato_bold,
+    color: Colors.white,
   },
   loaderWrapper: {
     width: DEVICE_WIDTH * 0.1,

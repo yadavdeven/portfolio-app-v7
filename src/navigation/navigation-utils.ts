@@ -2,7 +2,7 @@ import {
   CommonActions,
   createNavigationContainerRef,
 } from '@react-navigation/native';
-import {RootStackParamList} from '../types/navigation/RootStackParamList';
+import { RootStackParamList } from '../types/navigation/RootStackParamList';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -20,14 +20,14 @@ export const navigate = <RouteName extends keyof RootStackParamList>(
   }
 };
 
-export const goBack = () => {
+export const navigateBack = () => {
   if (navigationRef.isReady() && navigationRef.canGoBack()) {
     navigationRef.goBack();
   }
 };
 
-export const reset = (
-  routes: Array<{name: keyof RootStackParamList; params?: object}>,
+export const resetNavigation = (
+  routes: Array<{ name: keyof RootStackParamList; params?: object }>,
   index = 0,
 ) => {
   if (navigationRef.isReady()) {

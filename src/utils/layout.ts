@@ -1,11 +1,11 @@
-import {Dimensions} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export const isTablet = width >= 768;
 
-const insets = initialWindowMetrics?.insets ?? {top: 0, bottom: 0};
+const insets = initialWindowMetrics?.insets ?? { top: 0, bottom: 0 };
 
 export const usableHeight = height - insets.top - insets.bottom;
 

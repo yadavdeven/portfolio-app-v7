@@ -16,7 +16,7 @@ const BlankScreenModal = ({showModal}: BlankScreenModalProps) => {
         useNativeDriver
         useNativeDriverForBackdrop
         children={undefined}
-        backdropOpacity={0.4}
+        backdropOpacity={0.2}
       />
     </View>
   );
