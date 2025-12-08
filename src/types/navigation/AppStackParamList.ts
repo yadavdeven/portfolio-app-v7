@@ -1,6 +1,6 @@
 export type AppStackParamList = {
   HomeScreen: undefined;
   CardsRotateScreen: undefined;
-  // ScrollAnimationScreen: undefined;
+  ScrollAnimationScreen: undefined;
   // FileSaveAndDownloadScreen: undefined;
 };

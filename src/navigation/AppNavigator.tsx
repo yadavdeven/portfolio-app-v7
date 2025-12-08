@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../types/navigation/AppStackParamList';
-// import ScrollAnimationScreen from '../screens/animations/ScrollAnimation/ScrollAnimationScreen';
+import ScrollAnimationScreen from '../screens/animations/ScrollAnimation/ScrollAnimationScreen';
 import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
@@ -14,11 +14,11 @@ export default function AppNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={ROUTES.HOME} component={HomeScreen} />
       <Stack.Screen name={ROUTES.CARDS_ROTATE} component={CardsRotateScreen} />
-      {/* <Stack.Screen
+      <Stack.Screen
         name={ROUTES.SCROLL_ANIMATION}
         component={ScrollAnimationScreen}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={ROUTES.File_SAVE_AND_DOWNLOAD}
         component={FileSaveAndDownloadScreen}
       /> */}

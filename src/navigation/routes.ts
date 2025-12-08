@@ -7,6 +7,6 @@ export const ROUTES = {
   HOME: 'HomeScreen',
   APP_RELOAD: 'AppReloadScreen',
   CARDS_ROTATE: 'CardsRotateScreen',
-  // SCROLL_ANIMATION: 'ScrollAnimationScreen',
+  SCROLL_ANIMATION: 'ScrollAnimationScreen',
   // File_SAVE_AND_DOWNLOAD: 'FileSaveAndDownloadScreen',
 } as const;
