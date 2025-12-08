@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {API_ENDPOINTS} from '../../constants/endpoints';
-import makeApiRequestPreLogin from '../../utils/api';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { API_ENDPOINTS } from '../../constants/endpoints';
+import { makeApiRequestPreLogin } from '../../utils/api';
 
 interface RegisterPayload {
   name: string;

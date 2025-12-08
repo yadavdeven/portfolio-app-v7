@@ -2,8 +2,8 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import MenuSvg from '../../assets/images/global/menu_24dp_200.svg';
 import { moderateScale } from 'react-native-size-matters';
-import Colors from '../../constants/Colors';
 import { usableHeight } from '../../utils/layout';
+import Colors from '../../constants/Colors';
 
 export default function HomeHeader() {
   return (
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: moderateScale(16),
   },
   menuAndLogoContainer: {
     flexDirection: 'row',

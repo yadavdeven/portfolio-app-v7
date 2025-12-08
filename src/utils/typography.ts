@@ -33,7 +33,7 @@ const lato_20 = {
 export const FONTS = {
   lato_light: 'Lato-Regular',
   lato_regular: 'Lato-Regular',
-  lato_black: 'Lato-Bold',
+  lato_black: 'Lato-Black',
   lato_bold: 'Lato-Bold',
   josefin_regular: 'JosefinSans-Regular',
   josefin_medium: 'JosefinSans-Medium',

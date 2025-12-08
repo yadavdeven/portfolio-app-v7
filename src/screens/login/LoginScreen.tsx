@@ -1,22 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import LoginInput, { LoginInputRef } from '../../components/login/LoginInput';
+import { navigate, resetNavigation } from '../../navigation/navigation-utils';
 import ForgotPasswordText from '../../components/login/ForgotPasswordText';
 import SocialSignInIcons from '../../components/login/SocialSignInBtns';
+import Container, { ToastRef } from '../../components/common/Container';
 import ButtonStandard from '../../components/common/ButtonStandard';
-import { useAppDispatch } from '../../store/hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LoginHeader from '../../components/login/LoginHeader';
 import { setAppLoading } from '../../store/slices/appSlice';
-import LoginInput, { LoginInputRef } from '../../components/login/LoginInput';
-import { navigate, resetNavigation } from '../../navigation/navigation-utils';
-import Container, { ToastRef } from '../../components/common/Container';
 import BottomText from '../../components/login/BottomText';
+import { moderateScale } from 'react-native-size-matters';
 import { login } from '../../store/slices/authSlice';
+import { useAppDispatch } from '../../store/hooks';
 import { ROUTES } from '../../navigation/routes';
 import Colors from '../../constants/Colors';
 import styles from './styles';
-import { moderateScale } from 'react-native-size-matters';
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
