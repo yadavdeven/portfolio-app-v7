@@ -24,9 +24,9 @@ export default function AppToast({
 }: AppToastProps) {
   const bgColor =
     type === 'success'
-      ? Colors.primary_green
+      ? Colors.green_shade
       : type === 'error'
-      ? Colors.alert_red
+      ? Colors.error
       : Colors.primary_200;
 
   useEffect(() => {
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 9999,
     elevation: 5,
+    opacity: 0.5,
   },
   text: {
     fontFamily: FONTS.lato_bold,

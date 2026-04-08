@@ -20,9 +20,18 @@ export const categories: CategorySection[] = [
       { id: 'a-1', name: 'Cards Rotate', routeTo: 'CardsRotateScreen' },
       { id: 'a-2', name: 'Cards Swipe' },
       { id: 'a-3', name: 'Scroll Animation', routeTo: 'ScrollAnimationScreen' },
-      { id: 'a-4', name: 'Compare Animation' },
+      {
+        id: 'a-4',
+        name: 'Checkbox Animation',
+        routeTo: 'CheckboxAnimationScreen',
+      },
       { id: 'a-5', name: 'Tinder Swipe' },
     ],
+  },
+  {
+    id: 'features',
+    title: 'Features',
+    data: [{ id: 'f-1', name: 'Text Editor', routeTo: 'TextEditorScreen' }],
   },
   {
     id: 'file_storage_uploads',
@@ -53,10 +62,14 @@ export const categories: CategorySection[] = [
     id: 'native_modules',
     title: 'Native Modules',
     data: [
-      { id: 'b-1', name: 'Convert Image to Pdf' },
-      { id: 'b-2', name: 'sub2' },
+      { id: 'b-1', name: 'Show Welcome Alert', routeTo: 'WelcomeAlertScreen' },
+      {
+        id: 'b-2',
+        name: 'Biometric Authentication',
+        routeTo: 'BiometricScreen',
+      },
       { id: 'b-3', name: 'sub3' },
-      { id: 'b-4', name: 'sub3' },
+      { id: 'b-4', name: 'sub4' },
     ],
   },
   {

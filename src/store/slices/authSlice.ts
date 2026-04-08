@@ -18,12 +18,23 @@ export const register = createAsyncThunk(
 interface LoginPayload {
   email: string;
   password: string;
+  authProvider: 'email';
 }
 
 export const login = createAsyncThunk(
   'auth/login',
   async (params: LoginPayload) =>
     makeApiRequestPreLogin(API_ENDPOINTS.LOGIN, 'POST', params),
+);
+
+interface GoogleAuthPayload {
+  idToken: string;
+}
+
+export const googleAuth = createAsyncThunk(
+  'auth/googleAuth',
+  async (params: GoogleAuthPayload) =>
+    makeApiRequestPreLogin(API_ENDPOINTS.GOOGLE_AUTH, 'POST', params),
 );
 
 const initialAuthState = {};

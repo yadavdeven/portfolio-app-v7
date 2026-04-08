@@ -65,5 +65,6 @@ export default {
   primary_orange: '#fb680c',
   primary_green: '#69e780',
   alert_red: '#ff4d4d',
+  error: '#E35B5B',
   green_shade: '#76c681',
 };

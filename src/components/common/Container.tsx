@@ -9,6 +9,7 @@ type ToastType = 'success' | 'error' | 'default';
 
 export type ToastRef = {
   showToast: (text: string, type?: ToastType, duration?: number) => void;
+  hideToast: () => void;
 };
 
 interface ContainerProps {
@@ -29,6 +30,9 @@ const Container = forwardRef<ToastRef, ContainerProps>(
     useImperativeHandle(ref, () => ({
       showToast: (text, type = 'default', duration = 3000) => {
         setToast({ text, type, duration });
+      },
+      hideToast: () => {
+        setToast(null);
       },
     }));
 

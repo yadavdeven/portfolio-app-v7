@@ -35,11 +35,21 @@ export const FONTS = {
   lato_regular: 'Lato-Regular',
   lato_black: 'Lato-Black',
   lato_bold: 'Lato-Bold',
-  josefin_regular: 'JosefinSans-Regular',
   josefin_medium: 'JosefinSans-Medium',
   josefin_semi_bold: 'JosefinSans-SemiBold',
   josefin_bold: 'JosefinSans-Bold',
   menlo: 'Menlo-Regular',
+  inter_regular: 'Inter_18pt-Regular',
+  inter_medium: 'Inter_18pt-Medium',
+  inter_semi_bold: 'Inter_18pt-SemiBold',
+  inter_bold: 'Inter_18pt-Bold',
+  open_sans_regular: 'OpenSans-Regular',
+  open_sans_medium: 'OpenSans-Medium',
+  open_sans_semi_bold: 'OpenSans-SemiBold',
+  geom_regular: 'Geom-Regular',
+  geom_medium: 'Geom-Medium',
+  geom_semi_bold: 'Geom-SemiBold',
+  geom_bold: 'Geom-Bold',
 };
 
 export const FONT_STYLES = {

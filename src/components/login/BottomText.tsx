@@ -3,7 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 
 export default function BottomText({
@@ -15,12 +14,8 @@ export default function BottomText({
   link: string;
   onLinkPress: () => void;
 }) {
-  const insets = useSafeAreaInsets();
-
   return (
-    <View
-      style={[styles.container, { bottom: insets.bottom + moderateScale(10) }]}
-    >
+    <View style={[styles.container, { paddingBottom: moderateScale(16) }]}>
       <Text style={styles.text1}>{linkText}</Text>
       <TouchableOpacity onPress={onLinkPress}>
         <Text style={styles.text2}>{link}</Text>

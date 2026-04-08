@@ -3,4 +3,5 @@ export interface ButtonStandardProps {
   marginTop?: number;
   onPress: () => void;
   btnWidth?: number | `${number}%` | undefined;
+  isLoading?: boolean;
 }

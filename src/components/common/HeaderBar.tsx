@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     width: DEVICE_WIDTH,
     justifyContent: 'center',
     alignItems: 'center',
-    height: isAndroid ? moderateScale(54, 0.2) : moderateScale(50, 0.2),
+    height: isAndroid ? moderateScale(62, 0.2) : moderateScale(54, 0.2),
     borderBottomWidth: moderateScale(1, 0.2),
     borderBottomColor: Colors.offWhite_900,
   },

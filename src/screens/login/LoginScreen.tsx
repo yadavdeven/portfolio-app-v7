@@ -7,12 +7,14 @@ import ForgotPasswordText from '../../components/login/ForgotPasswordText';
 import SocialSignInIcons from '../../components/login/SocialSignInBtns';
 import Container, { ToastRef } from '../../components/common/Container';
 import ButtonStandard from '../../components/common/ButtonStandard';
+import { googleAuth, login } from '../../store/slices/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LoginHeader from '../../components/login/LoginHeader';
 import { setAppLoading } from '../../store/slices/appSlice';
 import BottomText from '../../components/login/BottomText';
 import { moderateScale } from 'react-native-size-matters';
-import { login } from '../../store/slices/authSlice';
+import { useToast } from '../../providers/ToastProvider';
+import { delay } from '../../utils/helperFunctions';
 import { useAppDispatch } from '../../store/hooks';
 import { ROUTES } from '../../navigation/routes';
 import Colors from '../../constants/Colors';
@@ -21,8 +23,11 @@ import styles from './styles';
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { showToast } = useToast();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('markchapman@gmail.com');
+  const [password, setPassword] = useState('Password@123');
 
   // ✅ refs
   const emailRef = useRef<LoginInputRef>(null);
@@ -37,24 +42,41 @@ export default function LoginScreen() {
     if (!emailValid || !passwordValid) return;
 
     dispatch(setAppLoading(true));
+    setIsLoading(true);
     try {
-      const response = await dispatch(login({ email, password })).unwrap();
+      delay(2000);
+      const response = await dispatch(
+        login({ email, password, authProvider: 'email' }),
+      ).unwrap();
       if (response.isSuccess) {
-        containerRef.current?.showToast('Login successful', 'success');
+        // reset navigation so user cannot go back to login
+        resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);
+      } else showToast(response.message ?? 'Login failed', 'error');
+    } catch (error) {
+      console.log('login error', error);
+      showToast((error as Error)?.message ?? 'Something went wrong', 'error');
+    } finally {
+      dispatch(setAppLoading(false));
+      setIsLoading(false);
+    }
+  };
 
+  const handleFirebaseTokenIdVerification = async (idToken: string) => {
+    dispatch(setAppLoading(true));
+    try {
+      const response = await dispatch(googleAuth({ idToken })).unwrap();
+      if (response.isSuccess) {
+        showToast('Google sign-in successful', 'success');
+        delay(1200);
         // reset navigation so user cannot go back to login
         resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);
       } else {
-        containerRef.current?.showToast(
-          response.message ?? 'Login failed',
-          'error',
-        );
+        showToast(response.message ?? 'Google sign-in failed', 'error');
       }
     } catch (error) {
-      console.log('login error', error);
-
-      containerRef.current?.showToast(
-        (error as Error)?.message ?? 'Something went wrong',
+      console.log('Google token verification error: ', error);
+      showToast(
+        (error as Error)?.message ?? 'Google sign-in verification failed',
         'error',
       );
     } finally {
@@ -65,7 +87,6 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={Colors.bg_800} barStyle="dark-content" />
-      {/* <BlankScreenModal showModal={isAppLoading} /> */}
       <KeyboardAwareScrollView
         contentContainerStyle={styles.contentContainer}
         enableOnAndroid
@@ -97,7 +118,7 @@ export default function LoginScreen() {
               placeholder="Enter Password"
               value={password}
               onChange={setPassword}
-              secureTextEntry
+              // secureTextEntry
               validateFor="password"
               isRequired
               isLastField
@@ -110,9 +131,12 @@ export default function LoginScreen() {
             btnLabel="Login"
             marginTop={moderateScale(36)}
             onPress={handleLogin}
+            isLoading={isLoading}
           />
           <Text style={styles.orText}>OR</Text>
-          <SocialSignInIcons />
+          <SocialSignInIcons
+            verifyFirebaseIdToken={handleFirebaseTokenIdVerification}
+          />
         </Container>
         <View style={styles.bottomTextContainer}>
           <BottomText

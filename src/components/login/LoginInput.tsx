@@ -13,9 +13,9 @@ import {
   Keyboard,
 } from 'react-native';
 import { LoginInputProps } from '../../types/components/login';
-import { FONTS } from '../../utils/typography';
 import { moderateScale } from 'react-native-size-matters';
 import { inputValidators } from '../../utils/validators';
+import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
 
 export type LoginInputRef = {

@@ -1,16 +1,51 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import GoogleLogo from '../../assets/images/global/google.svg';
-import AppleLogo from '../../assets/images/global/apple.svg';
 import FacebookLogo from '../../assets/images/global/facebook.svg';
 import GithubLogo from '../../assets/images/global/github.svg';
-import Colors from '../../constants/Colors';
+import GoogleLogo from '../../assets/images/global/google.svg';
+import AppleLogo from '../../assets/images/global/apple.svg';
+import { signInWithGoogle } from '../../utils/social-auth';
 import { moderateScale } from 'react-native-size-matters';
+import { useToast } from '../../providers/ToastProvider';
+import Colors from '../../constants/Colors';
 
-export default function SocialSignInIcons({}) {
+type SocialSignInIconsPropsType = {
+  verifyFirebaseIdToken: (idToken: string) => void;
+};
+
+export default function SocialSignInIcons({
+  verifyFirebaseIdToken,
+}: SocialSignInIconsPropsType) {
+  const { showToast } = useToast();
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithGoogle();
+      console.log('result: ', result);
+
+      const user = result?.user;
+      const idToken = await user?.getIdToken();
+      console.log('firebase idToken: ', idToken);
+      if (!idToken) {
+        showToast('Google sign-in failed. No ID token found.', 'error');
+        return;
+      }
+      verifyFirebaseIdToken(idToken);
+    } catch (error) {
+      console.log('error: ', error);
+
+      let message = 'Google sign-in failed. Please try again.';
+      if (error instanceof Error) message = error.message;
+      showToast(message, 'error');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.logo_wrapper}>
+      <TouchableOpacity
+        style={styles.logo_wrapper}
+        onPress={handleGoogleSignIn}
+      >
         <GoogleLogo width={moderateScale(24)} height={moderateScale(24)} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.logo_wrapper}>

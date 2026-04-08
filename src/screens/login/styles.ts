@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: isIOS ? moderateScale(125, 0.2) : moderateScale(160, 0.2),
     paddingHorizontal: moderateScale(20),
+    paddingBottom: 0,
   },
   inputsContainer: {
     marginTop: moderateScale(64, 0.2),
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   bottomTextContainer: {
     alignSelf: 'center',
     position: 'absolute',
-    bottom: isIOS ? -moderateScale(24, 0.2) : -moderateScale(24, 0.2),
+    bottom: 0,
   },
 });
 

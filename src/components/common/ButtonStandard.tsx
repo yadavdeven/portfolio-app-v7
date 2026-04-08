@@ -2,27 +2,26 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ButtonStandardProps } from '../../types/components/common';
 import { UIActivityIndicator } from 'react-native-indicators';
+import { moderateScale } from 'react-native-size-matters';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
-import { useAppSelector } from '../../store/hooks';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
-import { moderateScale } from 'react-native-size-matters';
 
 export default function ButtonStandard({
   btnLabel,
   marginTop = moderateScale(24),
   onPress,
   btnWidth,
+  isLoading = false,
 }: ButtonStandardProps) {
-  const { isAppLoading } = useAppSelector(state => state.app);
   return (
     <TouchableOpacity
-      style={[styles.btn, { width: btnWidth, marginTop }]}
+      style={[styles.btn, { width: btnWidth ?? DEVICE_WIDTH * 0.9, marginTop }]}
       onPress={onPress}
     >
-      {isAppLoading && <View style={styles.loaderWrapper} />}
+      {isLoading && <View style={styles.loaderWrapper} />}
       <Text style={styles.btnText}>{btnLabel}</Text>
-      {isAppLoading && (
+      {isLoading && (
         <View style={styles.loaderWrapper}>
           <UIActivityIndicator
             color="white"
@@ -37,7 +36,6 @@ export default function ButtonStandard({
 
 const styles = StyleSheet.create({
   btn: {
-    width: DEVICE_WIDTH * 0.9,
     height: moderateScale(40, 0.4),
     justifyContent: 'center',
     alignItems: 'center',
@@ -57,8 +55,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.bg_600,
   },
   btnText: {
-    fontSize: moderateScale(16),
-    fontFamily: FONTS.lato_bold,
+    fontSize: moderateScale(14, 0.3),
+    fontFamily: FONTS.open_sans_semi_bold,
     color: Colors.white,
   },
   loaderWrapper: {

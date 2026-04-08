@@ -8,5 +8,9 @@ export const ROUTES = {
   APP_RELOAD: 'AppReloadScreen',
   CARDS_ROTATE: 'CardsRotateScreen',
   SCROLL_ANIMATION: 'ScrollAnimationScreen',
-  // File_SAVE_AND_DOWNLOAD: 'FileSaveAndDownloadScreen',
+  File_SAVE_AND_DOWNLOAD: 'FileSaveAndDownloadScreen',
+  WELCOME_ALERT: 'WelcomeAlertScreen',
+  BIOMETRICS: 'BiometricScreen',
+  TEXT_EDITOR: 'TextEditorScreen',
+  CHECKBOX_ANIMATION: 'CheckboxAnimationScreen',
 } as const;
