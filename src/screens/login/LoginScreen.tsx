@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LoginInput, { LoginInputRef } from '../../components/login/LoginInput';
@@ -7,18 +7,31 @@ import ForgotPasswordText from '../../components/login/ForgotPasswordText';
 import SocialSignInIcons from '../../components/login/SocialSignInBtns';
 import Container, { ToastRef } from '../../components/common/Container';
 import ButtonStandard from '../../components/common/ButtonStandard';
-import { googleAuth, login } from '../../store/slices/authSlice';
+import {
+  biometricLoginStart,
+  biometricLoginVerify,
+  googleAuth,
+  login,
+} from '../../store/slices/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LoginHeader from '../../components/login/LoginHeader';
 import { setAppLoading } from '../../store/slices/appSlice';
 import BottomText from '../../components/login/BottomText';
 import { moderateScale } from 'react-native-size-matters';
 import { useToast } from '../../providers/ToastProvider';
-import { delay } from '../../utils/helperFunctions';
+import {
+  delay,
+  getBiometricCredentials,
+  saveAuthCredentials,
+  saveBiometricCredentials,
+} from '../../utils/helperFunctions';
 import { useAppDispatch } from '../../store/hooks';
 import { ROUTES } from '../../navigation/routes';
 import Colors from '../../constants/Colors';
 import styles from './styles';
+import ReactNativeBiometrics from 'react-native-biometrics';
+
+const rnBiometrics = new ReactNativeBiometrics();
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
@@ -34,6 +47,69 @@ export default function LoginScreen() {
   const passwordRef = useRef<LoginInputRef>(null);
   const containerRef = useRef<ToastRef>(null);
 
+  useEffect(() => {
+    const tryBiometricLogin = async () => {
+      try {
+        setAppLoading(true);
+        const stored = await getBiometricCredentials();
+        console.log('stored', stored);
+
+        if (!stored?.credentialId) return;
+
+        const startRes = await dispatch(
+          biometricLoginStart({ email: stored.email }),
+        ).unwrap();
+        console.log('biometricLoginStart response', startRes);
+
+        const { challenge } = startRes.responseData;
+
+        const { signature } = await rnBiometrics.createSignature({
+          promptMessage: 'Login with biometrics',
+          payload: challenge,
+        });
+        console.log('signature', signature);
+
+        // ❗ user cancelled
+        if (!signature) return;
+
+        const counter = (stored.counter || 0) + 1;
+
+        const finishRes = await dispatch(
+          biometricLoginVerify({
+            email: stored.email,
+            signature,
+            credentialId: stored.credentialId,
+            counter,
+          }),
+        ).unwrap();
+
+        console.log('biometricLoginVerify response', finishRes);
+
+        const { id, token, refreshToken, guid } = finishRes.responseData;
+
+        await saveAuthCredentials(id, token, refreshToken, guid, stored.email);
+
+        // ✅ add this — persist updated counter
+        await saveBiometricCredentials(
+          stored.userId,
+          stored.publicKey,
+          stored.credentialId,
+          stored.email,
+          counter,
+        );
+
+        resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);
+      } catch (err) {
+        console.log('Biometric login skipped or failed', err);
+        // ❌ DO NOTHING → user can login manually
+      } finally {
+        setAppLoading(false);
+      }
+    };
+
+    tryBiometricLogin();
+  }, [dispatch]);
+
   const handleLogin = async () => {
     // trigger validation manually
     const emailValid = emailRef.current?.validate();
@@ -44,11 +120,12 @@ export default function LoginScreen() {
     dispatch(setAppLoading(true));
     setIsLoading(true);
     try {
-      delay(2000);
       const response = await dispatch(
         login({ email, password, authProvider: 'email' }),
       ).unwrap();
       if (response.isSuccess) {
+        console.log('login success', response);
+
         // reset navigation so user cannot go back to login
         resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);
       } else showToast(response.message ?? 'Login failed', 'error');
@@ -66,7 +143,7 @@ export default function LoginScreen() {
     try {
       const response = await dispatch(googleAuth({ idToken })).unwrap();
       if (response.isSuccess) {
-        showToast('Google sign-in successful', 'success');
+        showToast('Google sign-in successful');
         delay(1200);
         // reset navigation so user cannot go back to login
         resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);

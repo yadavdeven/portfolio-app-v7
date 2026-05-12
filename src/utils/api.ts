@@ -1,6 +1,8 @@
 import { BASE_API_URL } from '@env';
 import * as Keychain from 'react-native-keychain';
 
+// const BASE_API_URL = 'http://192.168.1.25:5002/api/v1'; // Replace with your actual API URL
+
 const refreshAccessToken = async () => {
   const credentials = await getAuthCredentials();
   if (!credentials?.refreshToken) throw new Error('No refresh token');
@@ -29,6 +31,7 @@ const refreshAccessToken = async () => {
     token,
     refreshToken,
     credentials.guid,
+    credentials.email || '', // ✅ add this — email doesn't change on refresh
   );
 
   return token;
@@ -39,21 +42,14 @@ const saveAuthCredentials = async (
   accessToken: string,
   refreshToken: string,
   guid: string,
+  email: string, // ✅ add
 ) => {
-  try {
-    const data = { accessToken, refreshToken, guid };
-
-    await Keychain.setGenericPassword(userId, JSON.stringify(data), {
-      service: 'auth_credentials',
-      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
-    });
-
-    console.log('Tokens saved securely');
-  } catch (error) {
-    console.log('Error saving credentials to keychain:', error);
-    throw error;
-  }
+  const data = { accessToken, refreshToken, guid, email }; // ✅ add email
+  await Keychain.setGenericPassword(userId, JSON.stringify(data), {
+    service: 'auth_credentials',
+    accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+  });
 };
 
 const makeApiRequestPreLogin = async (
@@ -91,8 +87,11 @@ const makeApiRequestPreLogin = async (
 
     const responseData = responseJson?.responseData;
     if (responseData) {
-      const { id, token, refreshToken, guid } = responseData;
-      await saveAuthCredentials(id, token, refreshToken, guid);
+      const { id, token, refreshToken, guid, email } = responseData; // ✅ add email
+      if (id && token && refreshToken) {
+        // ✅ guard — only save if full auth data exists
+        await saveAuthCredentials(id, token, refreshToken, guid, email);
+      }
     }
     return responseJson;
   } catch (error: any) {
@@ -118,6 +117,7 @@ const getAuthCredentials = async () => {
       accessToken: parsed.accessToken,
       refreshToken: parsed.refreshToken,
       guid: parsed.guid,
+      email: parsed.email, // ✅ missing — add this
     };
   } catch (error) {
     console.log('Error loading credentials:', error);
@@ -133,6 +133,8 @@ const makeApiRequest = async (
   method: 'POST' | 'GET' | 'PUT' | 'DELETE' = 'GET',
   body?: any,
 ) => {
+  console.log('inside makeApiRequest', endpoint, method, body);
+
   try {
     const credentials = await getAuthCredentials();
 
@@ -169,6 +171,7 @@ const makeApiRequest = async (
 
     // 🔹 first attempt
     let response = await executeRequest(accessToken);
+    console.log('response', response);
 
     // 🔥 if access token expired → refresh and retry
     if (response.status === 401) {

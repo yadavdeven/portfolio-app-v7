@@ -51,12 +51,12 @@ export default function OrderReceiptModal({
 }: OrderReceiptModalProps) {
   const [toast, setToast] = useState<{
     text: string;
-    type?: 'success' | 'error' | 'default';
+    type?: 'info' | 'error' | 'default';
   } | null>(null);
 
   const showToast = (
     text: string,
-    type: 'success' | 'error' | 'default' = 'default',
+    type: 'info' | 'error' | 'default' = 'default',
   ) => {
     setToast({ text, type });
   };
@@ -165,8 +165,7 @@ export default function OrderReceiptModal({
             style={styles.btn}
             onPress={async () => {
               const success = await onDownloadPress();
-              if (success)
-                showToast('Receipt downloaded successfully', 'success');
+              if (success) showToast('Receipt downloaded successfully');
               else showToast('Failed to download receipt', 'error');
             }}
           >

@@ -7,7 +7,7 @@ import { dynamicHeight } from '../../utils/layout';
 
 type AppToastProps = {
   text: string;
-  type?: 'success' | 'error' | 'default';
+  type?: 'info' | 'error' | 'default';
   onHide?: () => void;
   duration?: number; // ms
   positionFromBottom?: number;
@@ -23,8 +23,8 @@ export default function AppToast({
   positionFromBottom = DEVICE_HEIGHT * 0.2,
 }: AppToastProps) {
   const bgColor =
-    type === 'success'
-      ? Colors.green_shade
+    type === 'info'
+      ? '#FFB300'
       : type === 'error'
       ? Colors.error
       : Colors.primary_200;

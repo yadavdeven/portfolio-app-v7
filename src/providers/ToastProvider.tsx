@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import AppToast from '../components/common/AppToast';
 
-type ToastType = 'success' | 'error' | 'default';
+type ToastType = 'info' | 'error' | 'default';
 
 type ToastContextType = {
   showToast: (text: string, type?: ToastType, duration?: number) => void;

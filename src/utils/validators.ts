@@ -3,7 +3,8 @@ export type ValidatorKey =
   | 'email'
   | 'mobile'
   | 'password'
-  | 'confirmPassword';
+  | 'confirmPassword'
+  | 'url';
 
 // 🔹 reusable "required" check with dynamic label
 const requiredValidator = (val: string, label: string): string | null => {
@@ -12,7 +13,10 @@ const requiredValidator = (val: string, label: string): string | null => {
 
 export const inputValidators: Record<
   ValidatorKey,
-  (val: string, extra?: { compareWith?: string; label?: string }) => string | null
+  (
+    val: string,
+    extra?: { compareWith?: string; label?: string },
+  ) => string | null
 > = {
   required: (val, { label } = {}) => {
     return requiredValidator(val, label ?? 'This field');
@@ -41,5 +45,14 @@ export const inputValidators: Record<
     if (required) return required;
     if (!compareWith?.trim()) return 'Password is required first';
     return val === compareWith ? null : 'Passwords do not match';
+  },
+  url: (val, { label } = {}) => {
+    const required = requiredValidator(val, label ?? 'URL');
+    if (required) return required;
+
+    const regex =
+      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/i;
+
+    return regex.test(val) ? null : `Invalid ${label ?? 'URL'}`;
   },
 };

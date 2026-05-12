@@ -7,7 +7,7 @@ import CheckboxAnimationScreen from '../screens/animations/Checkbox/CheckboxAnim
 import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScreen';
 import TextEditorScreen from '../screens/features/text-editor/TextEditorScreen';
 import WelcomeAlertScreen from '../screens/native-modules/welcome-alert';
-import BiometricScreen from '../screens/native-modules/biometrics';
+import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
 

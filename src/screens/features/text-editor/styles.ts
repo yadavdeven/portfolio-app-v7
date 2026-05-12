@@ -4,14 +4,8 @@ import { moderateScale } from 'react-native-size-matters';
 import { DEVICE_WIDTH } from '../../../constants/Dimensions';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.bg_600,
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-    paddingTop: moderateScale(16),
+  editorWrapper: {
+    position: 'relative',
   },
   editor: {
     padding: moderateScale(8),
@@ -19,36 +13,33 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     height: moderateScale(250, 0.4),
     width: DEVICE_WIDTH - moderateScale(32),
-    borderWidth: 1,
-    borderColor: Colors.grey_200,
+    borderWidth: moderateScale(1.5),
+    borderColor: Colors.primary_700,
     borderRadius: moderateScale(4),
   },
   toolbarContainer: {
-    marginTop: moderateScale(12),
-    width: DEVICE_WIDTH - moderateScale(32),
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: Colors.grey_200,
-    borderRadius: moderateScale(4),
-    paddingVertical: moderateScale(8),
-  },
-  toolbarContent: {
-    paddingHorizontal: moderateScale(8),
-  },
-  toolButton: {
-    minWidth: moderateScale(40),
+    backgroundColor: Colors.offWhite_200,
     height: moderateScale(40),
+    width: '100%',
+    // ← flexDirection & columnGap removed (moved to toolbarContent)
+  },
+  // ✅ NEW STYLE – this makes horizontal scroll work
+  toolbarContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: moderateScale(8),
+    columnGap: moderateScale(8),
+  },
+  toolbarItem: {
+    paddingHorizontal: moderateScale(2),
+    paddingVertical: moderateScale(2),
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: moderateScale(4),
-    borderRadius: moderateScale(4),
-    backgroundColor: Colors.grey_500,
-    paddingHorizontal: moderateScale(8),
   },
-  toolButtonText: {
-    fontSize: moderateScale(14, 0.4),
-    fontWeight: '600',
-    color: Colors.grey_700,
+  toolbarItemActive: {
+    backgroundColor: Colors.primary_300,
+    borderRadius: moderateScale(4),
+    elevation: 1,
   },
 });
 
