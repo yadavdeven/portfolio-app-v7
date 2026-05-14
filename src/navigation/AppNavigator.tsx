@@ -4,10 +4,11 @@ import { AppStackParamList } from '../types/navigation/AppStackParamList';
 import FileSaveAndDownloadScreen from '../screens/files-features/FileSaveAndDownload/FileSaveAndDownloadScreen';
 import ScrollAnimationScreen from '../screens/animations/ScrollAnimation/ScrollAnimationScreen';
 import CheckboxAnimationScreen from '../screens/animations/Checkbox/CheckboxAnimationScreen';
+import SelectDropdowns from '../screens/ui-components/SelectDropdowns/SelectDropdowns';
 import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScreen';
 import TextEditorScreen from '../screens/features/text-editor/TextEditorScreen';
-import WelcomeAlertScreen from '../screens/native-modules/welcome-alert';
 import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
+import WelcomeAlertScreen from '../screens/native-modules/welcome-alert';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
 
@@ -35,6 +36,10 @@ export default function AppNavigator() {
       <Stack.Screen
         name={ROUTES.CHECKBOX_ANIMATION}
         component={CheckboxAnimationScreen}
+      />
+      <Stack.Screen
+        name={ROUTES.SELECT_DROPDOWNS}
+        component={SelectDropdowns}
       />
     </Stack.Navigator>
   );

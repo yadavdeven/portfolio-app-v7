@@ -54,6 +54,14 @@ export const categories: CategorySection[] = [
     ],
   },
   {
+    id: 'components',
+    title: 'Components',
+    data: [
+      { id: 'g-1', name: 'Select Dropdowns', routeTo: 'SelectDropdowns' },
+      { id: 'g-2', name: 'Text Inputs' },
+    ],
+  },
+  {
     id: 'camera_media_processing',
     title: 'Camera & Media Processing',
     data: [

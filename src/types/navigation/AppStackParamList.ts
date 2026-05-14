@@ -7,4 +7,5 @@ export type AppStackParamList = {
   BiometricScreen: undefined;
   TextEditorScreen: undefined;
   CheckboxAnimationScreen: undefined;
+  SelectDropdowns: undefined;
 };

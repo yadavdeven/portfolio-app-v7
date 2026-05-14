@@ -13,4 +13,5 @@ export const ROUTES = {
   BIOMETRICS: 'BiometricScreen',
   TEXT_EDITOR: 'TextEditorScreen',
   CHECKBOX_ANIMATION: 'CheckboxAnimationScreen',
+  SELECT_DROPDOWNS: 'SelectDropdowns',
 } as const;

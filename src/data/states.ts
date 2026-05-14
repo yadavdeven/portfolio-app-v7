@@ -1,0 +1,114 @@
+export const STATES = [
+  {
+    label: 'Andhra Pradesh',
+    value: 'AP',
+  },
+  {
+    label: 'Arunachal Pradesh',
+    value: 'AR',
+  },
+  {
+    label: 'Assam',
+    value: 'AS',
+  },
+  {
+    label: 'Bihar',
+    value: 'BR',
+  },
+  {
+    label: 'Chhattisgarh',
+    value: 'CG',
+  },
+  {
+    label: 'Goa',
+    value: 'GA',
+  },
+  {
+    label: 'Gujarat',
+    value: 'GJ',
+  },
+  {
+    label: 'Haryana',
+    value: 'HR',
+  },
+  {
+    label: 'Himachal Pradesh',
+    value: 'HP',
+  },
+  {
+    label: 'Jharkhand',
+    value: 'JH',
+  },
+  {
+    label: 'Karnataka',
+    value: 'KA',
+  },
+  {
+    label: 'Kerala',
+    value: 'KL',
+  },
+  {
+    label: 'Madhya Pradesh',
+    value: 'MP',
+  },
+  {
+    label: 'Maharashtra',
+    value: 'MH',
+  },
+  {
+    label: 'Manipur',
+    value: 'MN',
+  },
+  {
+    label: 'Meghalaya',
+    value: 'ML',
+  },
+  {
+    label: 'Mizoram',
+    value: 'MZ',
+  },
+  {
+    label: 'Nagaland',
+    value: 'NL',
+  },
+  {
+    label: 'Odisha',
+    value: 'OR',
+  },
+  {
+    label: 'Punjab',
+    value: 'PB',
+  },
+  {
+    label: 'Rajasthan',
+    value: 'RJ',
+  },
+  {
+    label: 'Sikkim',
+    value: 'SK',
+  },
+  {
+    label: 'Tamil Nadu',
+    value: 'TN',
+  },
+  {
+    label: 'Telangana',
+    value: 'TS',
+  },
+  {
+    label: 'Tripura',
+    value: 'TR',
+  },
+  {
+    label: 'Uttar Pradesh',
+    value: 'UP',
+  },
+  {
+    label: 'Uttarakhand',
+    value: 'UK',
+  },
+  {
+    label: 'West Bengal',
+    value: 'WB',
+  },
+];
