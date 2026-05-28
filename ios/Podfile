@@ -35,5 +35,14 @@ target 'PortfolioApp' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    # Fix: react-native-firebase + use_frameworks! non-modular header error on RN 0.85
+    installer.pods_project.targets.each do |target|
+      if target.name.start_with?('RNFB')
+        target.build_configurations.each do |bc|
+          bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+          bc.build_settings['OTHER_CFLAGS'] = '$(inherited) -Wno-error=non-modular-include-in-framework-module -Wno-non-modular-include-in-framework-module'
+        end
+      end
+    end
   end
 end
