@@ -66,50 +66,6 @@ const getBiometricCredentials = async () => {
   }
 };
 
-const getAuthCredentials = async () => {
-  try {
-    const credentials = await Keychain.getGenericPassword({
-      service: 'auth_credentials',
-    });
-
-    if (!credentials) return null;
-
-    const { username: userId, password } = credentials;
-    const parsed = JSON.parse(password);
-
-    return {
-      userId,
-      accessToken: parsed.accessToken,
-      refreshToken: parsed.refreshToken,
-      guid: parsed.guid,
-      email: parsed.email, // ✅ add
-    };
-  } catch (error) {
-    console.log('Error loading credentials:', error);
-    return null;
-  }
-};
-
-const saveAuthCredentials = async (
-  userId: string,
-  accessToken: string,
-  refreshToken: string,
-  guid: string,
-  email: string, // ✅ add
-) => {
-  try {
-    const data = { accessToken, refreshToken, guid, email }; // ✅ add email
-    await Keychain.setGenericPassword(userId, JSON.stringify(data), {
-      service: 'auth_credentials',
-      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
-    });
-  } catch (error) {
-    console.log('Error saving credentials to keychain:', error);
-    throw error;
-  }
-};
-
 const isBiometricEnabled = async () => {
   try {
     // 1️⃣ check device support
@@ -137,7 +93,5 @@ export {
   delay,
   saveBiometricCredentials,
   getBiometricCredentials,
-  getAuthCredentials,
-  saveAuthCredentials,
   isBiometricEnabled,
 };

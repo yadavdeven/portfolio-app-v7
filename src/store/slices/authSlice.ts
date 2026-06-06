@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { API_ENDPOINTS } from '../../constants/endpoints';
-import { makeApiRequest, makeApiRequestPreLogin } from '../../utils/api';
+import { saveAuthCredentials } from '../../api/authStorage';
+import { API_ENDPOINTS } from '../../constants/end-points';
+import { ERROR_MESSAGES } from '../../constants/messages';
+import axiosClient from '../../api/axiosClient';
 
 interface RegisterPayload {
   name: string;
@@ -11,8 +13,17 @@ interface RegisterPayload {
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (params: RegisterPayload) =>
-    makeApiRequestPreLogin(API_ENDPOINTS.REGISTER, 'POST', params),
+  async (params: RegisterPayload) => {
+    const res = await axiosClient
+      .post(API_ENDPOINTS.REGISTER, params, { requiresAuth: false })
+      .then(r => r.data);
+
+    const { id, token, refreshToken, guid, email } = res.responseData;
+    if (id && token && refreshToken) {
+      await saveAuthCredentials(id, token, refreshToken, guid, email);
+    }
+    return res;
+  },
 );
 
 interface LoginPayload {
@@ -23,8 +34,19 @@ interface LoginPayload {
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (params: LoginPayload) =>
-    makeApiRequestPreLogin(API_ENDPOINTS.LOGIN, 'POST', params),
+  async (params: LoginPayload) => {
+    const res = await axiosClient
+      .post(API_ENDPOINTS.LOGIN, params, { requiresAuth: false })
+      .then(r => r.data);
+
+    const { id, token, refreshToken, guid, email } = res.responseData;
+    if (id && token && refreshToken) {
+      await saveAuthCredentials(id, token, refreshToken, guid, email);
+    } else {
+      throw new Error(ERROR_MESSAGES.LOGIN_FAILED);
+    }
+    return res;
+  },
 );
 
 interface GoogleAuthPayload {
@@ -33,13 +55,23 @@ interface GoogleAuthPayload {
 
 export const googleAuth = createAsyncThunk(
   'auth/googleAuth',
-  async (params: GoogleAuthPayload) =>
-    makeApiRequestPreLogin(API_ENDPOINTS.GOOGLE_AUTH, 'POST', params),
+  async (params: GoogleAuthPayload) => {
+    const res = await axiosClient
+      .post(API_ENDPOINTS.GOOGLE_AUTH, params, { requiresAuth: false })
+      .then(r => r.data);
+
+    const { id, token, refreshToken, guid, email } = res.responseData;
+    if (id && token && refreshToken) {
+      await saveAuthCredentials(id, token, refreshToken, guid, email);
+    }
+    return res;
+  },
 );
 
 export const biometricRegisterStart = createAsyncThunk(
   'biometric/registerStart',
-  async () => makeApiRequest(API_ENDPOINTS.BIOMETRIC_REGISTER_START, 'POST'),
+  async () =>
+    axiosClient.post(API_ENDPOINTS.BIOMETRIC_REGISTER_START).then(r => r.data),
 );
 
 export const biometricRegisterVerify = createAsyncThunk(
@@ -49,17 +81,19 @@ export const biometricRegisterVerify = createAsyncThunk(
     signature: string;
     deviceName: string;
   }) =>
-    makeApiRequest(API_ENDPOINTS.BIOMETRIC_REGISTER_VERIFY, 'POST', payload),
+    axiosClient
+      .post(API_ENDPOINTS.BIOMETRIC_REGISTER_VERIFY, payload)
+      .then(r => r.data),
 );
 
 export const biometricLoginStart = createAsyncThunk(
   'biometric/loginStart',
   async (payload: { email: string }) =>
-    makeApiRequestPreLogin(
-      API_ENDPOINTS.BIOMETRIC_LOGIN_START,
-      'POST',
-      payload,
-    ), // ✅
+    axiosClient
+      .post(API_ENDPOINTS.BIOMETRIC_LOGIN_START, payload, {
+        requiresAuth: false,
+      })
+      .then(r => r.data),
 );
 
 export const biometricLoginVerify = createAsyncThunk(
@@ -70,17 +104,19 @@ export const biometricLoginVerify = createAsyncThunk(
     credentialId: string;
     counter: number;
   }) =>
-    makeApiRequestPreLogin(
-      API_ENDPOINTS.BIOMETRIC_LOGIN_VERIFY,
-      'POST',
-      payload,
-    ), // ✅
+    axiosClient
+      .post(API_ENDPOINTS.BIOMETRIC_LOGIN_VERIFY, payload, {
+        requiresAuth: false,
+      })
+      .then(r => r.data),
 );
 
 export const biometricDisable = createAsyncThunk(
   'biometric/disable',
   async (payload: { credentialId: string }) =>
-    makeApiRequest(API_ENDPOINTS.BIOMETRIC_DISABLE, 'POST', payload),
+    axiosClient
+      .post(API_ENDPOINTS.BIOMETRIC_DISABLE, payload)
+      .then(r => r.data),
 );
 
 export const authSlice = createSlice({

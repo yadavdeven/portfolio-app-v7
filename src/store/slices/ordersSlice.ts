@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { API_ENDPOINTS } from '../../constants/endpoints';
-import { makeApiRequest } from '../../utils/api';
+import { API_ENDPOINTS } from '../../constants/end-points';
+import axiosClient from '../../api/axiosClient';
 
 // Payload sent TO the API
 export interface FetchOrdersPayload {
@@ -11,10 +11,11 @@ export interface FetchOrdersPayload {
   productName?: string;
   orderId?: string;
 }
+
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
   async (params: FetchOrdersPayload) =>
-    makeApiRequest(API_ENDPOINTS.FETCH_ORDERS, 'POST', params),
+    axiosClient.post(API_ENDPOINTS.FETCH_ORDERS, params).then(r => r.data),
 );
 
 const initialOrdersState = {};

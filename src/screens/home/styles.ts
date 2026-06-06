@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import { isAndroid } from '../../utils/helperFunctions';
+import { isAndroid } from '../../utils/helper-functions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
 

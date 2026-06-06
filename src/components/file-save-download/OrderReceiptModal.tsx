@@ -8,7 +8,7 @@ import DownloadSvg from '../../assets/svgs/download_24dp_300.svg';
 import CloseSvg from '../../assets/svgs/cancel_24dp_300.svg';
 import ShareSvg from '../../assets/svgs/share_24dp_300.svg';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
-import { isAndroid } from '../../utils/helperFunctions';
+import { isAndroid } from '../../utils/helper-functions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
 import AppToast from '../common/AppToast';

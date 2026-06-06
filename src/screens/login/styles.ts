@@ -1,8 +1,8 @@
+import { moderateScale } from 'react-native-size-matters';
+import { isIOS } from '../../utils/helper-functions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
 import { StyleSheet } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
-import { isIOS } from '../../utils/helperFunctions';
 
 const styles = StyleSheet.create({
   container: {

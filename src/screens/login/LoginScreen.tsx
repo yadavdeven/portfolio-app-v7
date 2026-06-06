@@ -1,5 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar, Text, View } from 'react-native';
+import {
+  biometricLoginStart,
+  biometricLoginVerify,
+  googleAuth,
+  login,
+} from '../../store/slices/authSlice';
+import {
+  delay,
+  getBiometricCredentials,
+  saveBiometricCredentials,
+} from '../../utils/helper-functions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LoginInput, { LoginInputRef } from '../../components/login/LoginInput';
 import { navigate, resetNavigation } from '../../navigation/navigation-utils';
@@ -7,29 +18,18 @@ import ForgotPasswordText from '../../components/login/ForgotPasswordText';
 import SocialSignInIcons from '../../components/login/SocialSignInBtns';
 import Container, { ToastRef } from '../../components/common/Container';
 import ButtonStandard from '../../components/common/ButtonStandard';
-import {
-  biometricLoginStart,
-  biometricLoginVerify,
-  googleAuth,
-  login,
-} from '../../store/slices/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LoginHeader from '../../components/login/LoginHeader';
 import { setAppLoading } from '../../store/slices/appSlice';
+import ReactNativeBiometrics from 'react-native-biometrics';
+import { saveAuthCredentials } from '../../api/authStorage';
 import BottomText from '../../components/login/BottomText';
 import { moderateScale } from 'react-native-size-matters';
 import { useToast } from '../../providers/ToastProvider';
-import {
-  delay,
-  getBiometricCredentials,
-  saveAuthCredentials,
-  saveBiometricCredentials,
-} from '../../utils/helperFunctions';
 import { useAppDispatch } from '../../store/hooks';
 import { ROUTES } from '../../navigation/routes';
 import Colors from '../../constants/Colors';
 import styles from './styles';
-import ReactNativeBiometrics from 'react-native-biometrics';
 
 const rnBiometrics = new ReactNativeBiometrics();
 
@@ -129,9 +129,10 @@ export default function LoginScreen() {
         // reset navigation so user cannot go back to login
         resetNavigation([{ name: ROUTES.APP_NAVIGATOR }]);
       } else showToast(response.message ?? 'Login failed', 'error');
-    } catch (error) {
+    } catch (error: any) {
       console.log('login error', error);
-      showToast((error as Error)?.message ?? 'Something went wrong', 'error');
+      const message = error?.response?.data?.message ?? 'Something went wrong';
+      showToast(message, 'error');
     } finally {
       dispatch(setAppLoading(false));
       setIsLoading(false);

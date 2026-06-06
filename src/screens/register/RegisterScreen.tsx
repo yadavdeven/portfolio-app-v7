@@ -12,7 +12,7 @@ import ButtonStandard from '../../components/common/ButtonStandard';
 import { setAppLoading } from '../../store/slices/appSlice';
 import BottomText from '../../components/login/BottomText';
 import { register } from '../../store/slices/authSlice';
-import { delay } from '../../utils/helperFunctions';
+import { delay } from '../../utils/helper-functions';
 import { useAppDispatch } from '../../store/hooks';
 import { ROUTES } from '../../navigation/routes';
 import styles from './styles';

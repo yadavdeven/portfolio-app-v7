@@ -4,9 +4,9 @@ import { moderateScale } from 'react-native-size-matters';
 import BackArrowIcon from '../../assets/images/global/arrow_back_ios_24dp_300.svg';
 import { navigateBack } from '../../navigation/navigation-utils';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
+import { isAndroid } from '../../utils/helper-functions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
-import { isAndroid } from '../../utils/helperFunctions';
 
 type HeaderBarProps = {
   title: string;

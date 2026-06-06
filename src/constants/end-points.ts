@@ -1,6 +1,7 @@
 export const API_ENDPOINTS = {
   REGISTER: 'auth/register',
   LOGIN: 'auth/login',
+  REFRESH_TOKEN: 'auth/refresh-token',
   GOOGLE_AUTH: 'auth/google',
   FETCH_ORDERS: 'orders/by-user',
   BIOMETRIC_REGISTER_START: 'auth/biometric/register/start',

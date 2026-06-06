@@ -11,11 +11,11 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import CalenderSvg from '../../assets/svgs/edit_calendar_24dp_300.svg';
+import { isAndroid, isIOS } from '../../utils/helper-functions';
 import SearchSvg from '../../assets/svgs/search_24dp_300.svg';
 import { moderateScale } from 'react-native-size-matters';
-import Colors from '../../constants/Colors';
 import { FONTS } from '../../utils/typography';
-import { isAndroid, isIOS } from '../../utils/helperFunctions';
+import Colors from '../../constants/Colors';
 
 type Props = {
   fromDate: Date | null;

@@ -20,7 +20,7 @@ import SearchSvg from '../../../assets/svgs/file-search.svg';
 import SearchBar from '../../../components/common/SearchBar';
 import { moderateScale } from 'react-native-size-matters';
 import NoDataSvg from '../../../assets/svgs/no-data.svg';
-import { delay } from '../../../utils/helperFunctions';
+import { delay } from '../../../utils/helper-functions';
 import { useAppDispatch } from '../../../store/hooks';
 import Colors from '../../../constants/Colors';
 import Share from 'react-native-share';

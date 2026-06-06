@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import RegisterScreen from '../screens/register/RegisterScreen';
-import LoginScreen from '../screens/login/LoginScreen';
-import { ROUTES } from './routes';
 import { AuthStackParamList } from '../types/navigation/AuthStackParamList';
+import RegisterScreen from '../screens/register/RegisterScreen';
+import { moderateScale } from 'react-native-size-matters';
+import LoginScreen from '../screens/login/LoginScreen';
 import { FONTS } from '../utils/typography';
 import Colors from '../constants/Colors';
-import { moderateScale } from 'react-native-size-matters';
+import { ROUTES } from './routes';
 
 export default function AuthNavigator() {
   const Stack = createNativeStackNavigator<AuthStackParamList>();
