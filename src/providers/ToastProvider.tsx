@@ -5,6 +5,7 @@ type ToastType = 'info' | 'error' | 'default';
 
 type ToastContextType = {
   showToast: (text: string, type?: ToastType, duration?: number) => void;
+  hideToast: () => void;
 };
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -29,7 +30,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, hideToast }}>
       {children}
 
       {/* Toast rendered at root level, above navigation & modals */}

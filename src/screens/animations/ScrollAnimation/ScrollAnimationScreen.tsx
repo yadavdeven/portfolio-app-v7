@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StatusBar, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -88,7 +88,6 @@ const ScrollAnimationScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.bg_700} barStyle="dark-content" />
       <HeaderBar title="Scroll Animation" bgColor={Colors.bg_700} />
       <View style={styles.contentContainer}>
         <Animated.FlatList

@@ -65,13 +65,13 @@ export default function OrderReceiptModal({
     <Modal
       backdropOpacity={isAndroid ? 0.3 : 0.4}
       isVisible={showReceiptModal}
-      animationInTiming={500}
-      animationOutTiming={400}
+      animationInTiming={400}
+      animationOutTiming={500}
       useNativeDriver
       useNativeDriverForBackdrop
       hideModalContentWhileAnimating
       animationIn="slideInUp"
-      animationOut="fadeOut"
+      animationOut="slideOutDown"
       onBackButtonPress={onBackButtonPress}
     >
       <View style={styles.container}>

@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ButtonStandardProps } from '../../types/components/common';
-import { UIActivityIndicator } from 'react-native-indicators';
 import { moderateScale } from 'react-native-size-matters';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
+import Loader from './Loader';
 
 export default function ButtonStandard({
   btnLabel,
@@ -23,11 +23,7 @@ export default function ButtonStandard({
       <Text style={styles.btnText}>{btnLabel}</Text>
       {isLoading && (
         <View style={styles.loaderWrapper}>
-          <UIActivityIndicator
-            color="white"
-            count={12}
-            size={moderateScale(14)}
-          />
+          <Loader size={moderateScale(14)} color={Colors.white} count={12} />
         </View>
       )}
     </TouchableOpacity>

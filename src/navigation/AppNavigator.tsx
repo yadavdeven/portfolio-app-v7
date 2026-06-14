@@ -11,6 +11,7 @@ import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
 import WelcomeAlertScreen from '../screens/native-modules/welcome-alert';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
+import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
 
 export default function AppNavigator() {
   const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -41,6 +42,7 @@ export default function AppNavigator() {
         name={ROUTES.SELECT_DROPDOWNS}
         component={SelectDropdowns}
       />
+      <Stack.Screen name={ROUTES.SSL_PINNING} component={SSLPinningScreen} />
     </Stack.Navigator>
   );
 }

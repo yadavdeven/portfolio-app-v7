@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native-modal/dist/modal.js b/node_modules/react-native-modal/dist/modal.js
+index 74edee4..8474f39 100644
+--- a/node_modules/react-native-modal/dist/modal.js
++++ b/node_modules/react-native-modal/dist/modal.js
+@@ -1,9 +1,16 @@
+ import * as React from 'react';
+-import { Animated, DeviceEventEmitter, Dimensions, InteractionManager, KeyboardAvoidingView, Modal, PanResponder, Platform, TouchableWithoutFeedback, View, } from 'react-native';
++import { Animated, DeviceEventEmitter, Dimensions, KeyboardAvoidingView, Modal, PanResponder, Platform, TouchableWithoutFeedback, View, } from 'react-native';
+ import * as animatable from 'react-native-animatable';
+ import { buildAnimations, initializeAnimations, reversePercentage, } from './utils';
+ import styles from './modal.style';
+ import { BackHandler } from './back-handler.js';
++// `InteractionManager` is deprecated in recent React Native versions and only
++// emits a warning here. The handles below are merely an animation-smoothness
++// hint, so we shim them to no-ops to silence the deprecation warning.
++const InteractionManager = {
++    createInteractionHandle: () => null,
++    clearInteractionHandle: () => { },
++};
+ // Override default react-native-animatable animations
+ initializeAnimations();
+ const defaultProps = {

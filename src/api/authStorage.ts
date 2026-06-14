@@ -27,14 +27,23 @@ export const saveAuthCredentials = async (
   email: string,
 ): Promise<void> => {
   const data = { accessToken, refreshToken, guid, email };
-  await Keychain.setGenericPassword(userId, JSON.stringify(data), {
+  const options: Keychain.SetOptions = {
     service: SERVICE,
     // Only accessible while the device is unlocked, and never synced/backed up
     // off this device.
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    // Prefer hardware-backed storage (Secure Enclave / TEE) when available.
-    securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
-  });
+  };
+  try {
+    // Prefer hardware-backed storage (Secure Enclave / TEE / StrongBox).
+    await Keychain.setGenericPassword(userId, JSON.stringify(data), {
+      ...options,
+      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+    });
+  } catch {
+    // Some Android devices lack a hardware keystore and throw when it's
+    // required — fall back to the best available software-backed storage.
+    await Keychain.setGenericPassword(userId, JSON.stringify(data), options);
+  }
 };
 
 /**

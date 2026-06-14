@@ -7,6 +7,9 @@ package com.portfolioapp
 // @ReactMethod fun showAlert(name: String) 
 // @ReactMethod fun openSettings() 
 // @ReactMethod fun logSomething()
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -31,9 +34,16 @@ class ToastAndAlertModule(
     }
 
     @ReactMethod
-    fun getGreetMessage(name: String, promise: Promise) {
+    fun greetWithToast(name: String, promise: Promise) {
         try {
-            promise.resolve("Hello, $name to the portfolio app.")
+            val message = "Hello, $name to the portfolio app."
+
+            // Toast.makeText(...).show() must run on the UI thread.
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(reactApplicationContext, message, Toast.LENGTH_SHORT).show()
+            }
+
+            promise.resolve(message)
         } catch (e: Exception) {
             promise.reject("GREET_ERROR", e)
         }

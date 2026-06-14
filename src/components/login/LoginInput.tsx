@@ -111,39 +111,38 @@ const LoginInput = forwardRef<LoginInputRef, LoginInputProps>(
       <View style={{ marginBottom: marginBottom ?? moderateScale(14) }}>
         <Text style={styles.inputLabel}>
           {inputLabel}
-          {isRequired && <Text style={{ color: Colors.alert_red }}> *</Text>}
+          {isRequired && <Text style={{ color: Colors.error }}> *</Text>}
         </Text>
-        <TextInput
-          ref={inputRef}
-          value={value}
-          onChangeText={handleChange}
-          placeholderTextColor={Colors.grey_700}
-          placeholder={placeholder}
-          keyboardType={keyboardType}
-          returnKeyType={isLastField ? 'done' : returnKeyType}
-          onFocus={() => setFocused(true)}
-          onBlur={handleBlur}
-          secureTextEntry={secureTextEntry}
-          onSubmitEditing={handleSubmit}
-          textContentType={textContentType}
-          autoComplete={autoComplete}
-          autoCorrect={false}
-          spellCheck={false}
-          autoCapitalize="none"
+        <View
           style={[
-            styles.input,
-            {
-              borderColor: error
-                ? Colors.alert_red
-                : focused
-                ? Colors.primary_300
-                : Colors.grey_800,
-              fontSize: !value
-                ? moderateScale(15, 0.4)
-                : moderateScale(16, 0.4),
-            },
+            styles.field,
+            focused && styles.fieldFocused,
+            !!error && styles.fieldError,
           ]}
-        />
+        >
+          <TextInput
+            ref={inputRef}
+            value={value}
+            onChangeText={handleChange}
+            placeholderTextColor={Colors.grey_600}
+            placeholder={placeholder}
+            keyboardType={keyboardType}
+            returnKeyType={isLastField ? 'done' : returnKeyType}
+            onFocus={() => setFocused(true)}
+            onBlur={handleBlur}
+            secureTextEntry={secureTextEntry}
+            onSubmitEditing={handleSubmit}
+            textContentType={textContentType}
+            autoComplete={autoComplete}
+            autoCorrect={false}
+            spellCheck={false}
+            autoCapitalize="none"
+            style={[
+              styles.input,
+              { fontSize: moderateScale(value ? 15 : 14, 0.4) },
+            ]}
+          />
+        </View>
         <Text style={styles.err_text}>{error || ''}</Text>
       </View>
     );
@@ -154,25 +153,42 @@ export default LoginInput;
 
 const styles = StyleSheet.create({
   inputLabel: {
-    fontSize: moderateScale(15, 0.4),
+    fontSize: moderateScale(14, 0.4),
     fontFamily: FONTS.lato_bold,
     color: Colors.grey_200,
-    marginBottom: moderateScale(5),
+    marginBottom: moderateScale(8),
+  },
+  field: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: moderateScale(8),
+    paddingHorizontal: moderateScale(14),
+    height: moderateScale(40),
+    borderWidth: 1,
+    borderColor: 'transparent',
+    shadowColor: Colors.grey_500,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  fieldFocused: {
+    borderColor: Colors.primary,
+  },
+  fieldError: {
+    borderColor: Colors.error,
   },
   input: {
-    width: '100%',
-    height: moderateScale(36),
-    borderRadius: 5,
+    flex: 1,
     padding: 0,
-    color: Colors.grey_200,
-    borderWidth: moderateScale(1),
-    paddingLeft: moderateScale(10),
+    color: Colors.grey_primary,
     fontFamily: FONTS.lato_bold,
   },
   err_text: {
-    fontFamily: FONTS.lato_regular,
-    color: Colors.alert_red,
+    marginTop: moderateScale(6),
     fontSize: moderateScale(12, 0.4),
-    marginTop: moderateScale(4),
+    fontFamily: FONTS.lato_bold,
+    color: Colors.error,
   },
 });

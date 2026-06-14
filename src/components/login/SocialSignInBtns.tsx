@@ -8,6 +8,7 @@ import { signInWithGoogle } from '../../utils/social-auth';
 import { moderateScale } from 'react-native-size-matters';
 import { useToast } from '../../providers/ToastProvider';
 import Colors from '../../constants/Colors';
+import { ERROR_MESSAGES } from '../../constants/messages';
 
 type SocialSignInIconsPropsType = {
   verifyFirebaseIdToken: (idToken: string) => void;
@@ -20,22 +21,30 @@ export default function SocialSignInIcons({
 
   const handleGoogleSignIn = async () => {
     try {
+      // Run the native Google → Firebase exchange (stages 1–6 in social-auth.ts).
       const result = await signInWithGoogle();
-      console.log('result: ', result);
 
-      const user = result?.user;
-      const idToken = await user?.getIdToken();
-      console.log('firebase idToken: ', idToken);
+      // null = the user cancelled the picker → do nothing, no error toast.
+      if (!result) return;
+
+      // STAGE 7 — mint a fresh FIREBASE ID token (different from Google's token).
+      // This is the only token our backend knows how to verify.
+      const idToken = await result.user.getIdToken();
       if (!idToken) {
-        showToast('Google sign-in failed. No ID token found.', 'error');
+        showToast(ERROR_MESSAGES.GOOGLE_SIGN_IN_FAILED, 'error');
         return;
       }
+
+      // STAGE 8 — hand the Firebase token to the screen, which POSTs it to our
+      // backend to exchange for our own app session. This component's job ends here.
       verifyFirebaseIdToken(idToken);
     } catch (error) {
-      console.log('error: ', error);
-
-      let message = 'Google sign-in failed. Please try again.';
-      if (error instanceof Error) message = error.message;
+      // Real failure (config/network/token) — surface the actual message, which
+      // propagates up from signInWithGoogle instead of being swallowed.
+      const message =
+        error instanceof Error
+          ? error.message
+          : ERROR_MESSAGES.GOOGLE_SIGN_IN_FAILED;
       showToast(message, 'error');
     }
   };
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: moderateScale(24),
-    marginTop: moderateScale(24),
+    marginTop: moderateScale(16),
     alignSelf: 'center',
   },
   logo_wrapper: {

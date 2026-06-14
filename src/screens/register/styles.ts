@@ -1,25 +1,25 @@
 import { StyleSheet } from 'react-native';
-import Colors from '../../constants/Colors';
-import { dynamicHeight } from '../../utils/layout';
-import { FONTS } from '../../utils/typography';
 import { moderateScale } from 'react-native-size-matters';
+import { FONTS } from '../../utils/typography';
+import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: Colors.bg_800,
+    flex: 1,
+    backgroundColor: Colors.bg_700,
+    alignItems: 'center',
   },
   contentContainer: {
-    paddingTop: moderateScale(24, 0.2),
-    paddingHorizontal: moderateScale(24, 0.2),
+    paddingTop: moderateScale(15, 0.2),
+    paddingHorizontal: moderateScale(15, 0.2),
   },
 
   orText: {
-    fontSize: dynamicHeight(20),
+    fontSize: moderateScale(16, 0.4),
     color: Colors.grey_200,
     fontFamily: FONTS.lato_bold,
     textAlign: 'center',
-    marginTop: dynamicHeight(32),
+    marginTop: moderateScale(24),
   },
 });
 

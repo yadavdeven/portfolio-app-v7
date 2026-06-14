@@ -5,6 +5,60 @@ import * as Keychain from 'react-native-keychain';
 const rnBiometrics = new ReactNativeBiometrics();
 
 const BIOMETRIC_SERVICE = 'biometric_credentials';
+const DEVICE_ID_SERVICE = 'device_id';
+
+/**
+ * Persists a secret to the keychain, preferring hardware-backed storage
+ * (Secure Enclave / TEE / StrongBox). Some Android devices have no hardware
+ * keystore and throw when SECURE_HARDWARE is required, so we fall back to the
+ * best available software-backed storage instead of failing the whole flow.
+ */
+const setKeychainItem = async (
+  username: string,
+  password: string,
+  options: Keychain.SetOptions,
+) => {
+  try {
+    await Keychain.setGenericPassword(username, password, {
+      ...options,
+      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+    });
+  } catch {
+    await Keychain.setGenericPassword(username, password, options);
+  }
+};
+
+/**
+ * RFC-4122 v4 UUID. Math.random is fine here: a deviceId is a stable, opaque
+ * label for a device row, not a secret or a security boundary.
+ */
+const generateUuidV4 = (): string =>
+  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+
+/**
+ * Returns a stable identifier for this physical device, generating and
+ * persisting one on first use. Survives logout/re-enrollment (unlike the
+ * biometric credential), so the backend can dedupe credentials per device.
+ */
+const getDeviceId = async (): Promise<string> => {
+  const existing = await Keychain.getGenericPassword({
+    service: DEVICE_ID_SERVICE,
+  });
+  if (existing && existing.password) return existing.password;
+
+  const deviceId = generateUuidV4();
+  await setKeychainItem('device', deviceId, {
+    service: DEVICE_ID_SERVICE,
+    // Readable at launch (even before first interactive unlock) and never
+    // synced off this device.
+    accessible: Keychain.ACCESSIBLE.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
+  });
+  return deviceId;
+};
 
 // check if device is iOS
 const isIOS = Platform.OS === 'ios';
@@ -25,18 +79,14 @@ const saveBiometricCredentials = async (
   publicKey: string,
   credentialId: string,
   email: string,
-  counter: number = 0,
 ) => {
   try {
-    const data = { publicKey, credentialId, email, counter };
+    const data = { publicKey, credentialId, email };
 
-    await Keychain.setGenericPassword(userId, JSON.stringify(data), {
+    await setKeychainItem(userId, JSON.stringify(data), {
       service: BIOMETRIC_SERVICE,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-      securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
     });
-
-    console.log('Biometric credentials saved securely');
   } catch (error) {
     console.log('Error saving biometric credentials:', error);
     throw error;
@@ -58,7 +108,6 @@ const getBiometricCredentials = async () => {
       publicKey: parsed.publicKey,
       credentialId: parsed.credentialId,
       email: parsed.email,
-      counter: parsed.counter || 0,
     };
   } catch (error) {
     console.log('Error loading biometric credentials:', error);
@@ -91,6 +140,7 @@ export {
   isIOS,
   isAndroid,
   delay,
+  getDeviceId,
   saveBiometricCredentials,
   getBiometricCredentials,
   isBiometricEnabled,

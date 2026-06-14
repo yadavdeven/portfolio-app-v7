@@ -56,10 +56,14 @@ interface GoogleAuthPayload {
 export const googleAuth = createAsyncThunk(
   'auth/googleAuth',
   async (params: GoogleAuthPayload) => {
+    // POST the Firebase ID token to the backend (public route — no app session yet).
+    // The backend verifies it and returns OUR tokens in responseData.
     const res = await axiosClient
       .post(API_ENDPOINTS.GOOGLE_AUTH, params, { requiresAuth: false })
       .then(r => r.data);
 
+    // Persist the backend-issued session to the keychain so the axios interceptor
+    // can attach it to every authenticated request from here on.
     const { id, token, refreshToken, guid, email } = res.responseData;
     if (id && token && refreshToken) {
       await saveAuthCredentials(id, token, refreshToken, guid, email);
@@ -80,6 +84,7 @@ export const biometricRegisterVerify = createAsyncThunk(
     publicKey?: string;
     signature: string;
     deviceName: string;
+    deviceId: string;
   }) =>
     axiosClient
       .post(API_ENDPOINTS.BIOMETRIC_REGISTER_VERIFY, payload)
@@ -98,12 +103,7 @@ export const biometricLoginStart = createAsyncThunk(
 
 export const biometricLoginVerify = createAsyncThunk(
   'biometric/loginVerify',
-  async (payload: {
-    email: string;
-    signature: string;
-    credentialId: string;
-    counter: number;
-  }) =>
+  async (payload: { email: string; signature: string; credentialId: string }) =>
     axiosClient
       .post(API_ENDPOINTS.BIOMETRIC_LOGIN_VERIFY, payload, {
         requiresAuth: false,

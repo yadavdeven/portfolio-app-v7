@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import EyeIcon from '../../assets/svgs/visibility_24dp_300.svg';
-import { UIActivityIndicator } from 'react-native-indicators';
 import { moderateScale } from 'react-native-size-matters';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
+import Loader from '../common/Loader';
 
 export type OrderCardPropsType = {
   orderId: string;
@@ -81,12 +81,7 @@ const OrderCard: React.FC<OrderCardPropsType> = ({
       <TouchableOpacity style={styles.button} onPress={onViewPress}>
         <Text style={styles.buttonText}>View Order</Text>
         {isSelected && btnLoading ? (
-          <UIActivityIndicator
-            color={Colors.white}
-            size={moderateScale(12)}
-            count={12}
-            style={styles.loader}
-          />
+          <Loader />
         ) : (
           <EyeIcon
             fill={Colors.white}

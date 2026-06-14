@@ -27,8 +27,10 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		91AE66CD5E9548C0B43E9B11 /* Menlo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 344C2886F09C4ABE8099FAD4 /* Menlo-Regular.ttf */; };
 		92EB9F844A54460FBA665D47 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7371069828473E97A82C63 /* Lato-Bold.ttf */; };
+		95849D6DFDE210E13DF8A45B /* CursorPositionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C180C3A2DCCCE40233592B /* CursorPositionModule.swift */; };
 		A81B2863FE714E2FAFD50334 /* Inter_18pt-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC3BEC1ED5864FCE9EE1A97D /* Inter_18pt-Medium.ttf */; };
 		C7A605ADE98841BA981D79A6 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E7EF5E45B27C464D92E86DED /* OpenSans-SemiBold.ttf */; };
+		CC199A4690D5A4C6C08E2897 /* CursorPositionModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF649CC16073D4C80FE91A /* CursorPositionModule.m */; };
 		CD854A5487C44B7CA5ADC0D6 /* JosefinSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5514C334B3144CB195A021BA /* JosefinSans-Bold.ttf */; };
 		E74B19DF947E45C59411AE48 /* Geom-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AB56D199B0B4EA8BA80BA4E /* Geom-SemiBold.ttf */; };
 		EB25A7AA408C4127A0109FA0 /* Inter_18pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56AB2B63880C4B259A956426 /* Inter_18pt-Bold.ttf */; };
@@ -44,6 +46,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PortfolioApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = PortfolioApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1A5FB6D5DD39437C86EC2211 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../src/assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		1ECF649CC16073D4C80FE91A /* CursorPositionModule.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PortfolioApp/CursorPositionModule.m; sourceTree = "<group>"; };
 		23746C28CD21496A9E45F5E9 /* Geom-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Geom-Bold.ttf"; path = "../src/assets/fonts/Geom-Bold.ttf"; sourceTree = "<group>"; };
 		344C2886F09C4ABE8099FAD4 /* Menlo-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Menlo-Regular.ttf"; path = "../src/assets/fonts/Menlo-Regular.ttf"; sourceTree = "<group>"; };
 		379F6072E7454C378980646C /* JosefinSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "JosefinSans-SemiBold.ttf"; path = "../src/assets/fonts/JosefinSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 		9AB56D199B0B4EA8BA80BA4E /* Geom-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Geom-SemiBold.ttf"; path = "../src/assets/fonts/Geom-SemiBold.ttf"; sourceTree = "<group>"; };
 		C3B4FE9E4D024B1C899B0914 /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../src/assets/fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
 		CCBB9C56A6CEC684410A0A68 /* Pods_PortfolioApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PortfolioApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1C180C3A2DCCCE40233592B /* CursorPositionModule.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PortfolioApp/CursorPositionModule.swift; sourceTree = "<group>"; };
 		DC3BEC1ED5864FCE9EE1A97D /* Inter_18pt-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Medium.ttf"; path = "../src/assets/fonts/Inter_18pt-Medium.ttf"; sourceTree = "<group>"; };
 		E7EF5E45B27C464D92E86DED /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBold.ttf"; path = "../src/assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		E90782CABFDA4CFB8AB5F267 /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../src/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
@@ -87,6 +91,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				D1C180C3A2DCCCE40233592B /* CursorPositionModule.swift */,
+				1ECF649CC16073D4C80FE91A /* CursorPositionModule.m */,
 			);
 			name = PortfolioApp;
 			sourceTree = "<group>";
@@ -349,6 +355,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				95849D6DFDE210E13DF8A45B /* CursorPositionModule.swift in Sources */,
+				CC199A4690D5A4C6C08E2897 /* CursorPositionModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,7 +10,7 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   View,
-  LayoutChangeEvent,
+  findNodeHandle,
 } from 'react-native';
 import type {
   EnrichedTextInputInstance,
@@ -30,6 +30,7 @@ import H2Svg from '../../../assets/svgs/format_h2_24dp_300.svg';
 import H1Svg from '../../../assets/svgs/format_h1_24dp_300.svg';
 import LinkSvg from '../../../assets/svgs/link_24dp_300.svg';
 import { useToast } from '../../../providers/ToastProvider';
+import { getCaretRect } from '../../../native/CursorPosition';
 import { MENTION_USERS } from '../../../data/mention-users';
 import { moderateScale } from 'react-native-size-matters';
 import Wrapper from '../../../components/common/Wrapper';
@@ -38,8 +39,12 @@ import MentionList from './MentionListModal';
 import LinkModal from './LinkModal';
 import styles from './styles';
 
+// Must match the fixed editor height in styles.ts (`editor.height`).
+const EDITOR_HEIGHT = moderateScale(250, 0.4);
+
 const TextEditorScreen = () => {
   const editorRef = useRef<EnrichedTextInputInstance>(null);
+  const editorWrapperRef = useRef<View>(null);
   // ← This holds the live formatting state
   const [stylesState, setStylesState] = useState<OnChangeStateEvent | null>(
     null,
@@ -51,7 +56,14 @@ const TextEditorScreen = () => {
   const [mentionQuery, setMentionQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [mentionLoading, setMentionLoading] = useState(false);
-  const [mentionTop, setMentionTop] = useState(0);
+  // Position of the mention list: anchored by `top` (below the caret) or by
+  // `bottom` (above the caret, when the caret is in the lower half).
+  const [mentionPos, setMentionPos] = useState<{
+    top?: number;
+    bottom?: number;
+  }>({ top: 0 });
+  // IDs of users currently mentioned in the editor (derived from the HTML).
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
 
   const { showToast } = useToast();
 
@@ -63,70 +75,43 @@ const TextEditorScreen = () => {
   } | null>(null);
 
   const plainTextRef = useRef('');
-  const editorLayoutRef = useRef({ width: 0, height: 0 });
   const suppressMentionRef = useRef(false);
   const forceMentionRef = useRef(false);
 
-  const EDITOR_FONT_SIZE = moderateScale(14, 0.4);
-  const EDITOR_LINE_HEIGHT = EDITOR_FONT_SIZE * 1.4;
-  const EDITOR_PADDING = moderateScale(8);
-  const MENTION_MODAL_HEIGHT = moderateScale(200);
+  const MENTION_GAP = moderateScale(4);
 
-  const computeMentionTop = useCallback(() => {
-    const { width, height } = editorLayoutRef.current;
-    if (!width || !height) return 0;
+  console.log('Mention user ids:', mentionedUserIds);
 
-    const text = plainTextRef.current;
-    const cursor = selectionRef.current?.start ?? text.length;
+  // Positions the mention list just below the caret, using the real caret rect
+  // from the native CursorPositionModule (resolved via the editor's node tag).
+  const updateMentionTop = useCallback(async () => {
+    const cursor = selectionRef.current?.start ?? plainTextRef.current.length;
+    const tag = findNodeHandle(editorWrapperRef.current as any);
+    if (tag == null) return;
+    const rect = await getCaretRect(tag, cursor);
+    if (!rect) return;
 
-    const charsPerLine = Math.max(
-      1,
-      Math.floor((width - EDITOR_PADDING * 2) / (EDITOR_FONT_SIZE * 0.55)),
-    );
-
-    const before = text.substring(0, cursor);
-    const segments = before.split('\n');
-    let lineIndex = 0;
-    for (let i = 0; i < segments.length - 1; i++) {
-      lineIndex += Math.max(1, Math.ceil(segments[i].length / charsPerLine));
+    // Lower half of the fixed-height editor -> open ABOVE the caret (anchored
+    // by bottom so the list grows upward); otherwise open below it.
+    const caretMid = rect.y + rect.height / 2;
+    if (caretMid > EDITOR_HEIGHT / 2) {
+      setMentionPos({ bottom: EDITOR_HEIGHT - rect.y + MENTION_GAP });
+    } else {
+      setMentionPos({ top: rect.y + rect.height + MENTION_GAP });
     }
-    lineIndex += Math.floor(
-      segments[segments.length - 1].length / charsPerLine,
-    );
-
-    const cursorTopY = EDITOR_PADDING + lineIndex * EDITOR_LINE_HEIGHT;
-    const cursorBottomY = cursorTopY + EDITOR_LINE_HEIGHT;
-
-    if (cursorTopY < height / 2) {
-      return cursorBottomY + moderateScale(4);
-    }
-    return Math.max(0, cursorTopY - MENTION_MODAL_HEIGHT - moderateScale(4));
-  }, [
-    EDITOR_FONT_SIZE,
-    EDITOR_LINE_HEIGHT,
-    EDITOR_PADDING,
-    MENTION_MODAL_HEIGHT,
-  ]);
+  }, [MENTION_GAP]);
 
   const openMentionList = useCallback(() => {
-    if (forceMentionRef.current) {
-      forceMentionRef.current = false;
-    } else {
-      const cursor = selectionRef.current?.start ?? 0;
-      const charBeforeAt = plainTextRef.current.charAt(cursor - 2);
-      if (charBeforeAt && /[a-zA-Z]/.test(charBeforeAt)) {
-        suppressMentionRef.current = true;
-        setShowMentionList(false);
-        return;
-      }
-    }
+    // Native only fires this when "@" starts a word (emails like "a@b" never
+    // trigger it), so no extra guarding is needed — just open the list.
+    forceMentionRef.current = false;
     suppressMentionRef.current = false;
     setMentionQuery('');
     setDebouncedQuery('');
     setMentionLoading(false);
-    setMentionTop(computeMentionTop());
+    updateMentionTop();
     setShowMentionList(true);
-  }, [computeMentionTop]);
+  }, [updateMentionTop]);
 
   useEffect(() => {
     if (!showMentionList) return;
@@ -142,13 +127,6 @@ const TextEditorScreen = () => {
     }, 300);
     return () => clearTimeout(t);
   }, [mentionQuery, showMentionList]);
-
-  const onEditorLayout = (e: LayoutChangeEvent) => {
-    editorLayoutRef.current = {
-      width: e.nativeEvent.layout.width,
-      height: e.nativeEvent.layout.height,
-    };
-  };
 
   const formatActions = [
     {
@@ -269,7 +247,7 @@ const TextEditorScreen = () => {
     const q = debouncedQuery.toLowerCase();
     return MENTION_USERS.filter(u =>
       `${u.firstName} ${u.lastName}`.toLowerCase().includes(q),
-    );
+    ).slice(0, 3);
   }, [debouncedQuery]);
 
   const handleMentionSelect = (user: {
@@ -277,14 +255,15 @@ const TextEditorScreen = () => {
     firstName: string;
     lastName: string;
   }) => {
-    editorRef.current?.setMention(
-      `${user.firstName} ${user.lastName}`,
-      String(user.id),
-    );
+    // Display handle: @firstnamelastname (lowercase). The text replaces the
+    // typed "@query" entirely, so the indicator must be part of it.
+    const handle = `@${user.firstName}${user.lastName}`.toLowerCase();
+    editorRef.current?.setMention('@', handle, { id: String(user.id) });
     setShowMentionList(false);
   };
 
-  console.log('Editor Ref:', htmlContent);
+  // console.log('Editor Ref:', htmlContent);
+  console.log('Mentioned user IDs:', mentionedUserIds);
 
   return (
     <Wrapper headerTitle="Text Editor" scrollView={false}>
@@ -293,10 +272,20 @@ const TextEditorScreen = () => {
         onClose={() => setShowLinkModal(false)}
         onAddLink={handleLinkAdd}
       />
-      <View style={styles.editorWrapper} onLayout={onEditorLayout}>
+      <View ref={editorWrapperRef} style={styles.editorWrapper}>
         <EnrichedTextInput
           ref={editorRef}
-          onChangeHtml={e => setHtmlContent(e.nativeEvent.value)}
+          onChangeHtml={e => {
+            const html = e.nativeEvent.value;
+            setHtmlContent(html);
+            // Derive the selected mention ids from the editor HTML so the list
+            // stays correct on both insert and deletion (single source of truth).
+            // Mentions serialize as: <mention text=".." indicator="@" id="1">..
+            const ids = [
+              ...html.matchAll(/<mention\b[^>]*?\bid="([^"]*)"[^>]*>/g),
+            ].map(m => m[1]);
+            setMentionedUserIds(ids);
+          }}
           onChangeText={e => {
             plainTextRef.current = e.nativeEvent.value;
           }}
@@ -307,15 +296,25 @@ const TextEditorScreen = () => {
           onChangeSelection={e => {
             const { start, end, text } = e.nativeEvent;
             selectionRef.current = { start, end, text };
+
             if (showMentionList) {
-              setMentionTop(computeMentionTop());
+              updateMentionTop();
             }
           }}
           onChangeMention={e => {
             if (suppressMentionRef.current) return;
             setMentionQuery(e.text);
-            setMentionTop(computeMentionTop());
+            updateMentionTop();
             setShowMentionList(true);
+          }}
+          onKeyPress={e => {
+            // Pressing space while the list is open dismisses it and keeps the
+            // typed "@text" as plain text (no mention is created). suppress
+            // stops the native mention event from immediately reopening it.
+            if (showMentionList && e.nativeEvent.key === ' ') {
+              suppressMentionRef.current = true;
+              setShowMentionList(false);
+            }
           }}
           mentionIndicators={['@']}
           onStartMention={openMentionList}
@@ -327,13 +326,20 @@ const TextEditorScreen = () => {
             a: {
               color: Colors.primary,
             },
+            mention: {
+              color: Colors.primary,
+              // Mention "pill" background from our background palette (library
+              // defaults to yellow + underline, both overridden here).
+              backgroundColor: Colors.bg_400,
+              textDecorationLine: 'none',
+            },
           }}
         />
         <MentionList
           visible={showMentionList}
           users={filteredUsers}
           onSelect={handleMentionSelect}
-          top={mentionTop}
+          position={mentionPos}
           query={mentionQuery}
           loading={mentionLoading}
         />

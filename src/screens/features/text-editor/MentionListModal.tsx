@@ -21,16 +21,18 @@ type Props = {
   users: User[];
   onSelect: (user: User) => void;
   visible: boolean;
-  top: number;
+  position: { top?: number; bottom?: number };
   query: string;
   loading: boolean;
 };
+
+export const MENTION_ITEM_HEIGHT = moderateScale(52);
 
 const MentionList: React.FC<Props> = ({
   users,
   onSelect,
   visible,
-  top,
+  position,
   query,
   loading,
 }) => {
@@ -41,37 +43,47 @@ const MentionList: React.FC<Props> = ({
     !showLoader && (query.length === 0 || users.length === 0);
 
   return (
-    <View style={[styles.container, { top }]}>
-      {showLoader ? (
-        <View style={styles.loaderWrap}>
-          <ActivityIndicator size="small" color={Colors.primary} />
-        </View>
-      ) : isEmpty ? (
-        <Text style={styles.emptyText}>
-          {query.length === 0
-            ? 'Start typing to mention users'
-            : 'No users found'}
-        </Text>
-      ) : (
-        <FlatList
-          data={users}
-          keyExtractor={item => String(item.id)}
-          keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.row} onPress={() => onSelect(item)}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>
-                  {item.firstName[0]}
-                  {item.lastName[0]}
+    <View style={[styles.container, position]}>
+      <View style={styles.inner}>
+        {showLoader ? (
+          <View style={styles.loaderWrap}>
+            <ActivityIndicator size="small" color={Colors.primary} />
+          </View>
+        ) : isEmpty ? (
+          <Text style={styles.emptyText}>
+            {query.length === 0
+              ? 'Start typing to mention users'
+              : 'No users found'}
+          </Text>
+        ) : (
+          <FlatList
+            data={users}
+            keyExtractor={item => String(item.id)}
+            keyboardShouldPersistTaps="handled"
+            getItemLayout={(_, index) => ({
+              length: MENTION_ITEM_HEIGHT,
+              offset: MENTION_ITEM_HEIGHT * index,
+              index,
+            })}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.row}
+                onPress={() => onSelect(item)}
+              >
+                <View style={styles.avatar}>
+                  <Text style={styles.avatarText}>
+                    {item.firstName[0]}
+                    {item.lastName[0]}
+                  </Text>
+                </View>
+                <Text style={styles.name}>
+                  {item.firstName} {item.lastName}
                 </Text>
-              </View>
-              <Text style={styles.name}>
-                {item.firstName} {item.lastName}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      )}
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -83,15 +95,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.bg_900,
     borderRadius: moderateScale(8),
     maxHeight: moderateScale(200),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 10,
     zIndex: 10,
+  },
+  inner: {
+    borderRadius: moderateScale(8),
     overflow: 'hidden',
   },
   emptyText: {
@@ -108,9 +123,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   row: {
+    height: MENTION_ITEM_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: moderateScale(10),
     paddingHorizontal: moderateScale(14),
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.grey_300,

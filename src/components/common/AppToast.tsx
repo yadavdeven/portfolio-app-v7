@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, Dimensions } from 'react-native';
-import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
-import Colors from '../../constants/Colors';
-import { FONTS } from '../../utils/typography';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { dynamicHeight } from '../../utils/layout';
+import { FONTS } from '../../utils/typography';
+import Colors from '../../constants/Colors';
 
 type AppToastProps = {
   text: string;
@@ -14,6 +20,8 @@ type AppToastProps = {
 };
 
 const { height: DEVICE_HEIGHT } = Dimensions.get('window');
+const ANIM_DURATION = 300;
+const OFFSET = dynamicHeight(20);
 
 export default function AppToast({
   text,
@@ -29,20 +37,53 @@ export default function AppToast({
       ? Colors.error
       : Colors.primary_200;
 
+  // Drive the animation manually instead of using Reanimated's declarative
+  // entering/exiting layout animations: those are unreliable on Android (the
+  // toast freezes then pops off). Here we control opacity + translateY directly
+  // and only call onHide() after the exit animation has actually finished.
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(OFFSET);
+
   useEffect(() => {
+    // animate in
+    opacity.value = withTiming(1, {
+      duration: ANIM_DURATION,
+      easing: Easing.out(Easing.ease),
+    });
+    translateY.value = withTiming(0, {
+      duration: ANIM_DURATION,
+      easing: Easing.out(Easing.ease),
+    });
+
+    // after the visible window, animate out then unmount
     const timer = setTimeout(() => {
-      onHide?.();
-    }, duration + 300); // buffer for exit animation
+      opacity.value = withTiming(0, {
+        duration: ANIM_DURATION,
+        easing: Easing.in(Easing.ease),
+      });
+      translateY.value = withTiming(
+        -OFFSET,
+        { duration: ANIM_DURATION, easing: Easing.in(Easing.ease) },
+        finished => {
+          if (finished && onHide) scheduleOnRN(onHide);
+        },
+      );
+    }, duration);
+
     return () => clearTimeout(timer);
-  }, [duration, onHide]);
+  }, [duration, onHide, opacity, translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(300)}
-      exiting={FadeOutUp.duration(300)}
       style={[
         styles.container,
         { backgroundColor: bgColor, bottom: positionFromBottom },
+        animatedStyle,
       ]}
     >
       <Text style={styles.text}>{text}</Text>
@@ -59,7 +100,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 9999,
     elevation: 5,
-    opacity: 0.5,
   },
   text: {
     fontFamily: FONTS.lato_bold,

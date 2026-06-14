@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DeviceEventEmitter, StatusBar, Text, View } from 'react-native';
+import { DeviceEventEmitter, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../../../components/common/HeaderBar';
 import Colors from '../../../constants/Colors';
@@ -62,7 +62,6 @@ const CheckboxAnimationScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.bg_600} barStyle="dark-content" />
       <HeaderBar title="Checkbox Animation" bgColor={Colors.bg_600} />
       <View style={styles.contentContainer}>
         {/* <View style={styles.headerContainer}>

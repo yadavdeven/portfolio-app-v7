@@ -37,14 +37,15 @@
     "react-native": "0.85.3",
     "react-native-biometrics": "^3.0.1",
     "react-native-enriched": "^0.4.1",
-    "react-native-enriched-markdown": "^0.5.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.28.0",
-    "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-keyboard-controller": "^1.21.9",
     "react-native-keychain": "^10.0.0",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-mmkv": "^4.3.1",
     "react-native-modal": "^14.0.0-rc.1",
+    "react-native-nitro-modules": "^0.35.9",
     "react-native-permissions": "^5.4.4",
     "react-native-reanimated": "^4.4.0",
     "react-native-safe-area-context": "^5.5.2",
@@ -53,6 +54,7 @@
     "react-native-simple-toast": "^3.3.2",
     "react-native-size-matters": "^0.4.2",
     "react-native-skeleton-placeholder": "^5.2.4",
+    "react-native-ssl-public-key-pinning": "^1.2.6",
     "react-native-svg": "^15.15.5",
     "react-native-view-shot": "^5.1.0",
     "react-native-worklets": "^0.9.1",
@@ -86,5 +88,13 @@
   },
   "engines": {
     "node": ">=22.11.0"
+  },
+  "codegenConfig": {
+    "name": "AppSpecs",
+    "type": "modules",
+    "jsSrcsDir": "src/native",
+    "android": {
+      "javaPackageName": "com.portfolioapp"
+    }
   }
 }

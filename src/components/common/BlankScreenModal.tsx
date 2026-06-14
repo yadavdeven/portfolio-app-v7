@@ -1,31 +1,27 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Modal from 'react-native-modal';
+import { Modal, StyleSheet, View } from 'react-native';
 
 interface BlankScreenModalProps {
   showModal: boolean;
 }
 
-const BlankScreenModal = ({showModal}: BlankScreenModalProps) => {
+const BlankScreenModal = ({ showModal }: BlankScreenModalProps) => {
   return (
-    <View style={styles.container}>
-      <Modal
-        isVisible={showModal}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        useNativeDriver
-        useNativeDriverForBackdrop
-        children={undefined}
-        backdropOpacity={0.2}
-      />
-    </View>
+    <Modal visible={showModal} animationType="fade" transparent>
+      <View style={styles.backdrop} />
+    </Modal>
   );
 };
 
 export default BlankScreenModal;
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
   },
 });

@@ -1,36 +1,30 @@
 import React, { useEffect } from 'react';
-import {
-  Image,
-  ScrollView,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, Switch, Text, TouchableOpacity, View } from 'react-native';
 import ReactNativeBiometrics, {
   BiometryType,
   BiometryTypes,
 } from 'react-native-biometrics';
-import { getBiometricDisabledMessage } from '../../../utils/message-helpers';
-import Wrapper from '../../../components/common/Wrapper';
-import Colors from '../../../constants/Colors';
-import styles from './styles';
-import { useToast } from '../../../providers/ToastProvider';
-import { useAppDispatch } from '../../../store/hooks';
 import {
   biometricDisable,
   biometricRegisterStart,
   biometricRegisterVerify,
 } from '../../../store/slices/authSlice';
 import {
-  getAuthCredentials,
   getBiometricCredentials,
+  getDeviceId,
   isBiometricEnabled,
   saveBiometricCredentials,
-} from '../../../utils/helperFunctions';
+} from '../../../utils/helper-functions';
+import { getBiometricDisabledMessage } from '../../../utils/message-helpers';
+import { ERROR_MESSAGES } from '../../../constants/messages';
+import { getAuthCredentials } from '../../../api/authStorage';
+import { useToast } from '../../../providers/ToastProvider';
+import Wrapper from '../../../components/common/Wrapper';
+import Loader from '../../../components/common/Loader';
+import { useAppDispatch } from '../../../store/hooks';
 import * as Keychain from 'react-native-keychain';
-import { moderateScale } from 'react-native-size-matters';
-import { UIActivityIndicator } from 'react-native-indicators';
+import Colors from '../../../constants/Colors';
+import styles from './styles';
 
 // At the top of your file
 const icons = {
@@ -111,6 +105,7 @@ export default function BiometricScreen() {
           biometryType: available ? biometryType : null,
         });
       } catch (e) {
+        console.log('Biometric sensor check error', e);
         setBiometricInfo({
           available: false,
           biometryType: null,
@@ -131,17 +126,13 @@ export default function BiometricScreen() {
     try {
       setLoading(true);
       const startResponse = await dispatch(biometricRegisterStart()).unwrap();
-      console.log('startResponse', startResponse);
 
       const { challenge } = startResponse.responseData;
       const { keysExist } = await rnBiometrics.biometricKeysExist();
-      console.log('keysExist', keysExist);
 
       let publicKey: string | undefined;
       if (!keysExist) {
         const result = await rnBiometrics.createKeys();
-        console.log('createKeys result', result);
-
         publicKey = result.publicKey;
       } else {
         const stored = await getBiometricCredentials();
@@ -160,30 +151,31 @@ export default function BiometricScreen() {
       }
 
       if (!publicKey) {
-        throw new Error('Public key not found');
+        console.log('Public key not found after key creation/retrieval');
+        throw new Error(ERROR_MESSAGES.BIOMETRIC_SETUP_FAILED);
       }
 
       const { signature } = await rnBiometrics.createSignature({
         promptMessage: 'Enable Biometric Authentication',
         payload: challenge,
       });
-      console.log('signature result', signature);
 
       if (!signature) {
         throw new Error('Biometric authentication was cancelled');
       }
+
+      const deviceId = await getDeviceId();
 
       const finishRes = await dispatch(
         biometricRegisterVerify({
           publicKey,
           signature,
           deviceName: 'My Phone',
+          deviceId,
         }),
       ).unwrap();
-      console.log('finishRes', finishRes);
 
       const credentialId = finishRes.responseData?.credentialId;
-      console.log('credentialId:', credentialId);
 
       if (!credentialId) {
         throw new Error('Credential ID missing');
@@ -214,7 +206,6 @@ export default function BiometricScreen() {
         publicKey,
         credentialId,
         auth.email,
-        0,
       );
       setBiometricsEnabled(true);
       showToast('Biometrics enabled successfully');
@@ -273,17 +264,13 @@ export default function BiometricScreen() {
   };
 
   return (
-    <Wrapper headerTitle="Biometrics">
-      <ScrollView contentContainerStyle={styles.container}>
-        {loading && (
-          <View style={styles.loadingOverlay}>
-            <UIActivityIndicator
-              color={Colors.primary}
-              count={12}
-              size={moderateScale(24)}
-            />
-          </View>
-        )}
+    <>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <Loader color={Colors.primary_200} />
+        </View>
+      )}
+      <Wrapper headerTitle="Biometrics">
         {/* Auth section */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Authentication</Text>
@@ -351,12 +338,7 @@ export default function BiometricScreen() {
           </View>
 
           {/* Info banner */}
-          <View
-            style={[
-              styles.banner,
-              biometricsEnabled ? styles.bannerSuccess : styles.bannerWarn,
-            ]}
-          >
+          <View style={styles.banner}>
             <Text style={styles.bannerText}>
               {biometricsEnabled
                 ? 'Biometrics are enabled. You can use biometrics for login.'
@@ -364,7 +346,7 @@ export default function BiometricScreen() {
             </Text>
           </View>
         </View>
-      </ScrollView>
-    </Wrapper>
+      </Wrapper>
+    </>
   );
 }

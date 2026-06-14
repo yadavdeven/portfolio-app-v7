@@ -1,20 +1,16 @@
 import { StyleSheet } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import Colors from '../../../constants/Colors';
 import { FONTS } from '../../../utils/typography';
+import Colors from '../../../constants/Colors';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    // paddingTop: moderateScale(16),
-  },
   loadingOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
@@ -144,12 +140,6 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10),
     marginBottom: moderateScale(12),
     borderWidth: 0.5,
-  },
-  bannerSuccess: {
-    backgroundColor: Colors.primary_900,
-    borderColor: Colors.primary_700,
-  },
-  bannerWarn: {
     backgroundColor: '#FFF8ED',
     borderColor: '#FAC775',
   },

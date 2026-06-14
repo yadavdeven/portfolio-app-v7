@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import Colors from '../../constants/Colors';
@@ -18,7 +18,6 @@ const Wrapper = ({
 }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.bg_600} barStyle="dark-content" />
       <HeaderBar title={headerTitle} bgColor={Colors.bg_600} />
       {scrollView ? (
         <ScrollView style={[styles.contentContainer, { ...containerStyle }]}>

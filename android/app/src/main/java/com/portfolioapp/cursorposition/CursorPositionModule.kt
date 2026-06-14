@@ -22,33 +22,12 @@ class CursorPositionModule(reactContext: ReactApplicationContext) :
     fun getCaretRect(viewTag: Int, charIndex: Int, promise: Promise) {
         UiThreadUtil.runOnUiThread {
             try {
-                val ctx = reactApplicationContext
-
-                // Try Fabric first, fall back to Paper
-                var rootView: View? = try {
-                    UIManagerHelper.getUIManager(ctx, UIManagerType.FABRIC)
-                        ?.resolveView(viewTag)
-                } catch (e: Exception) {
-                    null
-                }
-
-                if (rootView == null) {
-                    rootView = try {
-                        UIManagerHelper.getUIManager(ctx, UIManagerType.DEFAULT)
-                            ?.resolveView(viewTag)
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-
-                if (rootView == null) {
-                    promise.reject("E_NO_VIEW", "No view found for tag $viewTag")
-                    return@runOnUiThread
-                }
-
-                val editText = findEditText(rootView)
+                val editText = resolveEditText(viewTag)
                 if (editText == null) {
-                    promise.reject("E_NO_EDIT_TEXT", "No EditText found in view tree")
+                    promise.reject(
+                        "E_NO_EDIT_TEXT",
+                        "No EditText found (tag=$viewTag, no focused EditText)",
+                    )
                     return@runOnUiThread
                 }
 
@@ -60,9 +39,15 @@ class CursorPositionModule(reactContext: ReactApplicationContext) :
 
                 val safeOffset = charIndex.coerceIn(0, editText.text.length)
                 val line = layout.getLineForOffset(safeOffset)
-                val xPx = layout.getPrimaryHorizontal(safeOffset) + editText.totalPaddingLeft
-                val topPx = (layout.getLineTop(line) + editText.totalPaddingTop).toFloat()
-                val bottomPx = (layout.getLineBottom(line) + editText.totalPaddingTop).toFloat()
+                // Subtract scrollX/scrollY so the rect is relative to the visible
+                // EditText viewport (matches the RN view's coordinate space), not
+                // the full scrollable text content.
+                val xPx = layout.getPrimaryHorizontal(safeOffset) +
+                    editText.totalPaddingLeft - editText.scrollX
+                val topPx = (layout.getLineTop(line) + editText.totalPaddingTop -
+                    editText.scrollY).toFloat()
+                val bottomPx = (layout.getLineBottom(line) + editText.totalPaddingTop -
+                    editText.scrollY).toFloat()
 
                 val result = Arguments.createMap().apply {
                     putDouble("x", PixelUtil.toDIPFromPixel(xPx).toDouble())
@@ -75,6 +60,35 @@ class CursorPositionModule(reactContext: ReactApplicationContext) :
                 promise.reject("E_CURSOR", e.message ?: "Unknown error", e)
             }
         }
+    }
+
+    /**
+     * Resolves the target EditText. View-tag resolution via the UIManager is
+     * unreliable in bridgeless/Fabric, so we primarily rely on the currently
+     * focused view (which IS the editor while the user is typing), and fall
+     * back to walking the view tree resolved from the RN tag.
+     */
+    private fun resolveEditText(viewTag: Int): EditText? {
+        // 1. Currently focused view — the editor the caret lives in.
+        val ctx = reactApplicationContext
+        val focused = ctx.currentActivity?.currentFocus
+        if (focused is EditText) return focused
+
+        // 2. Fall back to resolving the RN view by tag (Fabric, then Paper).
+        val rootView: View? =
+            resolveViewByTag(ctx, viewTag, UIManagerType.FABRIC)
+                ?: resolveViewByTag(ctx, viewTag, UIManagerType.DEFAULT)
+        return rootView?.let { findEditText(it) }
+    }
+
+    private fun resolveViewByTag(
+        ctx: ReactApplicationContext,
+        viewTag: Int,
+        type: Int,
+    ): View? = try {
+        UIManagerHelper.getUIManager(ctx, type)?.resolveView(viewTag)
+    } catch (e: Exception) {
+        null
     }
 
     private fun findEditText(view: View): EditText? {

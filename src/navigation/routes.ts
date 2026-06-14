@@ -14,4 +14,5 @@ export const ROUTES = {
   TEXT_EDITOR: 'TextEditorScreen',
   CHECKBOX_ANIMATION: 'CheckboxAnimationScreen',
   SELECT_DROPDOWNS: 'SelectDropdowns',
+  SSL_PINNING: 'SSLPinningScreen',
 } as const;

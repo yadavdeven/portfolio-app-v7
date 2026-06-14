@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   NativeModules,
-  StatusBar,
   StyleSheet,
   TextInput,
   View,
@@ -33,7 +32,7 @@ const WelcomeAlertScreen = () => {
   const handleShowToast = async () => {
     if (!name) return showToast('Please enter a name');
     try {
-      const greetMessage = await ToastAndAlertModule.getGreetMessage(name);
+      const greetMessage = await ToastAndAlertModule.greetWithToast(name);
       showToast(greetMessage);
     } catch (error) {
       console.log('Error showing toast message:', error);
@@ -43,7 +42,6 @@ const WelcomeAlertScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.bg_600} barStyle="dark-content" />
       <HeaderBar title="Welcome Alert" bgColor={Colors.bg_600} />
       <View style={styles.contentContainer}>
         <TextInput

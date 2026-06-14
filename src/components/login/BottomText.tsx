@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { FONTS } from '../../utils/typography';
-import Colors from '../../constants/Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
 import { moderateScale } from 'react-native-size-matters';
+import { FONTS } from '../../utils/typography';
+import Colors from '../../constants/Colors';
 
 export default function BottomText({
   linkText,
@@ -14,8 +15,11 @@ export default function BottomText({
   link: string;
   onLinkPress: () => void;
 }) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingBottom: moderateScale(16) }]}>
+    <View
+      style={[styles.container, { bottom: insets.bottom + moderateScale(16) }]}
+    >
       <Text style={styles.text1}>{linkText}</Text>
       <TouchableOpacity onPress={onLinkPress}>
         <Text style={styles.text2}>{link}</Text>
@@ -26,6 +30,7 @@ export default function BottomText({
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',

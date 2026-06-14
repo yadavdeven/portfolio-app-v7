@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { FlatList, StatusBar, View, Text, Keyboard, Alert } from 'react-native';
+import { FlatList, View, Text, Keyboard, Alert } from 'react-native';
 import OrderReceiptModal, {
   OrderType,
 } from '../../../components/file-save-download/OrderReceiptModal';
@@ -8,21 +8,19 @@ import OrderCard, {
 } from '../../../components/file-save-download/OrderCard';
 import RectangleSkeletonLoader from '../../../components/common/RectangleSkeletonLoader';
 import FromToDatePicker from '../../../components/common/FromToDatePicker';
-import Container, { ToastRef } from '../../../components/common/Container';
 import { requestGallerySavePermission } from '../../../utils/permissions';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { openSettings, RESULTS } from 'react-native-permissions';
 import { fetchOrders } from '../../../store/slices/ordersSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import ViewShot, { captureRef } from 'react-native-view-shot';
-import HeaderBar from '../../../components/common/HeaderBar';
+import Wrapper from '../../../components/common/Wrapper';
 import SearchSvg from '../../../assets/svgs/file-search.svg';
 import SearchBar from '../../../components/common/SearchBar';
 import { moderateScale } from 'react-native-size-matters';
 import NoDataSvg from '../../../assets/svgs/no-data.svg';
 import { delay } from '../../../utils/helper-functions';
 import { useAppDispatch } from '../../../store/hooks';
-import Colors from '../../../constants/Colors';
+import { useToast } from '../../../providers/ToastProvider';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import styles from './styles';
@@ -71,9 +69,8 @@ const renderNoDataContent = () => {
 const FileSaveAndDownloadScreen = () => {
   const dispatch = useAppDispatch();
 
-  // const { showToast } = useToast();
+  const { showToast, hideToast } = useToast();
 
-  const containerRef = useRef<ToastRef>(null);
   const flatListRef = useRef<FlatList>(null);
   const receiptRef = useRef<ViewShotRef>(null);
 
@@ -114,10 +111,14 @@ const FileSaveAndDownloadScreen = () => {
     if (isLoadMore) setShowFooterLoader(true);
     else setShowSkeletonLoader(true);
     await delay(3000);
-    flatListRef.current?.scrollToOffset({
-      offset: 0,
-      animated: false,
-    });
+    // Only jump back to the top for a fresh search; keep the user's
+    // scroll position when appending the next page of results.
+    if (!isLoadMore) {
+      flatListRef.current?.scrollToOffset({
+        offset: 0,
+        animated: false,
+      });
+    }
     let params: FetchOrderParams = { numberOfRecords: 5, page: 1 };
     if (isLoadMore) params.page = page + 1;
     else params.page = 1;
@@ -137,7 +138,7 @@ const FileSaveAndDownloadScreen = () => {
 
     try {
       const response = await dispatch(fetchOrders(params)).unwrap();
-      containerRef.current?.hideToast();
+      hideToast();
 
       if (response.isSuccess) {
         const responseData = response?.responseData || [];
@@ -154,10 +155,7 @@ const FileSaveAndDownloadScreen = () => {
       console.log('fetch orders by date error', error);
       setOrders(isLoadMore ? orders : []);
       setHasMoreOrders(false);
-      containerRef.current?.showToast(
-        (error as Error)?.message ?? 'Something went wrong',
-        'error',
-      );
+      showToast((error as Error)?.message ?? 'Something went wrong', 'error');
     } finally {
       setShowSkeletonLoader(false);
       setShowFooterLoader(false);
@@ -181,7 +179,7 @@ const FileSaveAndDownloadScreen = () => {
    */
   const handleLoadMore = () => {
     if (!hasMoreOrders || showFooterLoader || isInitialState) return;
-    containerRef.current?.showToast('Loading...', 'default');
+    showToast('Loading...', 'default');
     handleOrderSearch(searchInitiatedBy, true);
   };
 
@@ -288,7 +286,7 @@ const FileSaveAndDownloadScreen = () => {
             ],
           );
         } else {
-          containerRef.current?.showToast('Gallery permission denied', 'error');
+          showToast('Gallery permission denied', 'error');
         }
         return false; // ❗ permission failed
       }
@@ -325,77 +323,75 @@ const FileSaveAndDownloadScreen = () => {
       }
 
       console.log('Download error:', error);
-      containerRef.current?.showToast('Failed to save receipt', 'error');
+      showToast('Failed to save receipt', 'error');
 
       return false;
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.bg_600} barStyle="dark-content" />
-      <HeaderBar title="File Save & Download" bgColor={Colors.bg_600} />
-      <Container ref={containerRef} containerStyle={styles.container}>
-        <View style={styles.contentContainer}>
-          {showReceiptModal && selectedOrder && (
-            <OrderReceiptModal
-              receiptRef={receiptRef}
-              showReceiptModal={showReceiptModal}
-              orderId={selectedOrder?.orderId}
-              orderDate={selectedOrder?.orderDate?.split('T')[0]}
-              productName={selectedOrder?.productName}
-              customerName={selectedOrder?.customerName}
-              customerMobile={selectedOrder?.customerMobile}
-              customerEmail={selectedOrder?.customerEmail}
-              totalAmount={selectedOrder?.totalAmount}
-              currStatus={selectedOrder?.currStatus}
-              onClosePress={() => setShowReceiptModal(false)}
-              onSharePress={handleCaptureAndShareScreenShot}
-              onDownloadPress={handleDownloadPress}
-              onBackButtonPress={() => setShowReceiptModal(false)}
-            />
-          )}
-          <FromToDatePicker
-            fromDate={fromDate}
-            toDate={toDate}
-            openFromDate={openFromDate}
-            openToDate={openToDate}
-            setFromDate={setFromDate}
-            setToDate={setToDate}
-            setOpenFromDate={setOpenFromDate}
-            setOpenToDate={setOpenToDate}
-            onSearchPress={() => handleOrderSearch('date')}
-          />
-          <SearchBar
-            placeholder="Search By Product Name or Order Id"
-            value={searchText}
-            onChangeText={setSearchText}
-            onSearchPress={() => handleOrderSearch('searchText')}
-          />
-          {showSkeletonLoader && (
-            <View style={styles.skeletonLoadersContainer}>
-              <RectangleSkeletonLoader height={moderateScale(232)} />
-              <RectangleSkeletonLoader height={moderateScale(232)} />
-              <RectangleSkeletonLoader height={moderateScale(232)} />
-            </View>
-          )}
-          <FlatList
-            ref={flatListRef}
-            data={orders}
-            contentContainerStyle={[
-              styles.ordersContainer,
-              { paddingBottom: getPaddingBottom() },
-            ]}
-            keyExtractor={(item: OrderCardPropsType) => item.orderId}
-            ListEmptyComponent={renderEmptyComponent}
-            onEndReachedThreshold={0.5}
-            onEndReached={handleLoadMore}
-            ListFooterComponent={renderFooter}
-            renderItem={renderItem}
-          />
+    <Wrapper
+      headerTitle="File Save & Download"
+      scrollView={false}
+      containerStyle={styles.contentContainer}
+    >
+      {showReceiptModal && selectedOrder && (
+        <OrderReceiptModal
+          receiptRef={receiptRef}
+          showReceiptModal={showReceiptModal}
+          orderId={selectedOrder?.orderId}
+          orderDate={selectedOrder?.orderDate?.split('T')[0]}
+          productName={selectedOrder?.productName}
+          customerName={selectedOrder?.customerName}
+          customerMobile={selectedOrder?.customerMobile}
+          customerEmail={selectedOrder?.customerEmail}
+          totalAmount={selectedOrder?.totalAmount}
+          currStatus={selectedOrder?.currStatus}
+          onClosePress={() => setShowReceiptModal(false)}
+          onSharePress={handleCaptureAndShareScreenShot}
+          onDownloadPress={handleDownloadPress}
+          onBackButtonPress={() => setShowReceiptModal(false)}
+        />
+      )}
+      <FromToDatePicker
+        fromDate={fromDate}
+        toDate={toDate}
+        openFromDate={openFromDate}
+        openToDate={openToDate}
+        setFromDate={setFromDate}
+        setToDate={setToDate}
+        setOpenFromDate={setOpenFromDate}
+        setOpenToDate={setOpenToDate}
+        onSearchPress={() => handleOrderSearch('date')}
+      />
+      <SearchBar
+        placeholder="Search By Product Name or Order Id"
+        value={searchText}
+        onChangeText={setSearchText}
+        onSearchPress={() => handleOrderSearch('searchText')}
+      />
+      {showSkeletonLoader && (
+        <View style={styles.skeletonLoadersContainer}>
+          <RectangleSkeletonLoader height={moderateScale(232)} />
+          <RectangleSkeletonLoader height={moderateScale(232)} />
+          <RectangleSkeletonLoader height={moderateScale(232)} />
         </View>
-      </Container>
-    </SafeAreaView>
+      )}
+      <FlatList
+        ref={flatListRef}
+        data={orders}
+        contentContainerStyle={[
+          styles.ordersContainer,
+          { paddingBottom: getPaddingBottom() },
+        ]}
+        keyExtractor={(item: OrderCardPropsType) => item.orderId}
+        ListEmptyComponent={renderEmptyComponent}
+        onEndReachedThreshold={0.5}
+        onEndReached={handleLoadMore}
+        ListFooterComponent={renderFooter}
+        renderItem={renderItem}
+      />
+    </Wrapper>
   );
 };
 

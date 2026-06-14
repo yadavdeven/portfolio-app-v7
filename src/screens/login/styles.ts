@@ -7,11 +7,11 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.bg_800,
+    backgroundColor: Colors.bg_700,
   },
   contentContainer: {
     flexGrow: 1,
-    paddingTop: isIOS ? moderateScale(125, 0.2) : moderateScale(160, 0.2),
+    paddingTop: isIOS ? moderateScale(125, 0.2) : moderateScale(150, 0.2),
     paddingHorizontal: moderateScale(20),
     paddingBottom: 0,
   },

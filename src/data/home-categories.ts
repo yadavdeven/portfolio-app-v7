@@ -36,6 +36,11 @@ export const categories: CategorySection[] = [
         name: 'Biometric Authentication',
         routeTo: 'BiometricScreen',
       },
+      {
+        id: 'f-3',
+        name: 'SSl Pinning',
+        routeTo: 'SSLPinningScreen',
+      },
     ],
   },
   {

@@ -125,3 +125,4 @@ SHA-256: FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B
 Valid until: Wednesday, 1 May, 2052
 ----------
 
+mongosh "mongodb+srv://portfolio-cluster-dev.oxtve4x.mongodb.net/" --apiVersion 1 --username deveny0007dev

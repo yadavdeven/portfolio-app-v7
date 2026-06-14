@@ -9,4 +9,5 @@ export const API_ENDPOINTS = {
   BIOMETRIC_LOGIN_START: 'auth/biometric/login/start',
   BIOMETRIC_LOGIN_VERIFY: 'auth/biometric/login/verify',
   BIOMETRIC_DISABLE: 'auth/biometric/disable',
+  SSL_PINNING_ECHO: 'ssl-pinning/echo-request',
 };

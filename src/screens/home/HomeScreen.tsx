@@ -3,7 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import {
   SectionList,
-  StatusBar,
   Text,
   TouchableOpacity,
   View,
@@ -13,7 +12,6 @@ import { navigate } from '../../navigation/navigation-utils';
 import Container from '../../components/common/Container';
 import { moderateScale } from 'react-native-size-matters';
 import HomeHeader from '../../components/home/HomeHeader';
-import Colors from '../../constants/Colors';
 import styles from './styles';
 
 type SubItem = {
@@ -38,7 +36,6 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={Colors.white} barStyle="dark-content" />
       <Container containerStyle={styles.contentContainer}>
         <HomeHeader />
         <SectionList

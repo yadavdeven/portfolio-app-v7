@@ -4,10 +4,6 @@ import { FONTS } from '../../../utils/typography';
 import Colors from '../../../constants/Colors';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.bg_600,
-  },
   contentContainer: {
     flex: 1,
     paddingTop: moderateScale(16),
