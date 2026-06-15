@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   contentContainer: {
+    flex: 1,
     paddingTop: isAndroid ? moderateScale(16) : moderateScale(4),
     paddingHorizontal: moderateScale(12),
     backgroundColor: Colors.white,

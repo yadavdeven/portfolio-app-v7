@@ -89,6 +89,7 @@ export default function BiometricScreen() {
   const [biometricInfo, setBiometricInfo] = React.useState<{
     available: boolean;
     biometryType: BiometryType | null | undefined;
+    error?: string;
   }>({
     available: false,
     biometryType: null,
@@ -97,12 +98,13 @@ export default function BiometricScreen() {
   useEffect(() => {
     const checkSensor = async () => {
       try {
-        const { available, biometryType } =
+        const { available, biometryType, error } =
           await rnBiometrics.isSensorAvailable();
 
         setBiometricInfo({
           available,
           biometryType: available ? biometryType : null,
+          error,
         });
       } catch (e) {
         console.log('Biometric sensor check error', e);

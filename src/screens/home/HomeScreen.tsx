@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import { categories as rawCategories } from '../../data/home-categories';
 import { navigate } from '../../navigation/navigation-utils';
-import Container from '../../components/common/Container';
+import BlankScreenModal from '../../components/common/BlankScreenModal';
 import { moderateScale } from 'react-native-size-matters';
 import HomeHeader from '../../components/home/HomeHeader';
+import { useAppSelector } from '../../store/hooks';
 import styles from './styles';
 
 type SubItem = {
@@ -30,13 +31,16 @@ const categories: CategorySection[] = rawCategories;
 const SectionSeparator = () => <View style={styles.sectionSeparator} />;
 
 const HomeScreen: React.FC = () => {
+  const { isAppLoading } = useAppSelector(state => state.app);
+
   const handleSubCategoryPress = item => {
     navigate(item.routeTo);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Container containerStyle={styles.contentContainer}>
+      <View style={styles.contentContainer}>
+        <BlankScreenModal showModal={isAppLoading} />
         <HomeHeader />
         <SectionList
           sections={categories}
@@ -64,7 +68,7 @@ const HomeScreen: React.FC = () => {
             </TouchableOpacity>
           )}
         />
-      </Container>
+      </View>
     </SafeAreaView>
   );
 };

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,6 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import Colors from '../../constants/Colors';
 import { FONTS } from '../../utils/typography';
@@ -53,6 +55,7 @@ const DropdownStandard = ({
   onSelect,
 }: DropdownStandardProps) => {
   const anchorRef = useRef<View>(null);
+  const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<AnchorPosition | null>(null);
   const hasValue = !!value;
@@ -65,15 +68,21 @@ const DropdownStandard = ({
       const spaceBelow = winH - (y + height) - GAP;
       const spaceAbove = y - GAP;
 
+      // With edge-to-edge enabled the window content draws behind the status
+      // bar, so measureInWindow coordinates are offset from the full-screen
+      // react-native-modal container by the top inset. Translate into the
+      // modal's coordinate space so the dropdown anchors to the field.
+      const modalOffset = Platform.OS === 'android' ? insets.top : 0;
+
       let placement: Placement;
       let top: number | undefined;
 
       if (spaceBelow >= desiredHeight) {
         placement = 'below';
-        top = y + height + GAP;
+        top = y + height + GAP + modalOffset;
       } else if (spaceAbove >= desiredHeight) {
         placement = 'above';
-        top = y - desiredHeight - GAP;
+        top = y - desiredHeight - GAP + modalOffset;
       } else {
         placement = 'center';
       }

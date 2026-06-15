@@ -85,13 +85,4 @@ export const categories: CategorySection[] = [
       { id: 'b-4', name: 'sub4' },
     ],
   },
-  {
-    id: 'custom_hooks',
-    title: 'Custom Hooks',
-    data: [
-      { id: 'c-1', name: 'Custom Hook 1' },
-      { id: 'c-2', name: 'Custom Hook 2' },
-      { id: 'c-3', name: 'Custom Hook 3' },
-    ],
-  },
 ];

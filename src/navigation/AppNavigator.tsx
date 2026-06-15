@@ -13,9 +13,9 @@ import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
 import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
 
-export default function AppNavigator() {
-  const Stack = createNativeStackNavigator<AppStackParamList>();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
+export default function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={ROUTES.HOME} component={HomeScreen} />
@@ -25,7 +25,7 @@ export default function AppNavigator() {
         component={ScrollAnimationScreen}
       />
       <Stack.Screen
-        name={ROUTES.File_SAVE_AND_DOWNLOAD}
+        name={ROUTES.FILE_SAVE_AND_DOWNLOAD}
         component={FileSaveAndDownloadScreen}
       />
       <Stack.Screen

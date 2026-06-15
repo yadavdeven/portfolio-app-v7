@@ -130,21 +130,24 @@ const SSLPinningScreen = () => {
         Relaunch the app after toggling for it to fully take effect.
       </Text>
 
-      <TextInputStandard
-        label="String Param"
-        placeholder="Enter a string"
-        value={stringParam}
-        onChangeText={setStringParam}
-      />
+      <View style={styles.inputRow}>
+        <TextInputStandard
+          containerStyle={styles.inputHalf}
+          label="String Param"
+          placeholder="Enter a string"
+          value={stringParam}
+          onChangeText={setStringParam}
+        />
 
-      <TextInputStandard
-        containerStyle={styles.inputSpacing}
-        label="Number Param"
-        placeholder="Enter a number"
-        keyboardType="number-pad"
-        value={numberParam}
-        onChangeText={text => setNumberParam(text.replace(/[^0-9]/g, ''))}
-      />
+        <TextInputStandard
+          containerStyle={styles.inputHalfRight}
+          label="Number Param"
+          placeholder="Enter a number"
+          keyboardType="number-pad"
+          value={numberParam}
+          onChangeText={text => setNumberParam(text.replace(/[^0-9]/g, ''))}
+        />
+      </View>
 
       <TextInputStandard
         containerStyle={styles.inputSpacing}

@@ -10,6 +10,16 @@ const styles = StyleSheet.create({
   inputSpacing: {
     marginTop: moderateScale(16),
   },
+  inputRow: {
+    flexDirection: 'row',
+  },
+  inputHalf: {
+    flex: 1,
+  },
+  inputHalfRight: {
+    flex: 1,
+    marginLeft: moderateScale(12),
+  },
   // ── SSL pinning toggle ─────────────────────────────────────────
   toggleCard: {
     flexDirection: 'row',

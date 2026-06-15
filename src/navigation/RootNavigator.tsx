@@ -8,9 +8,9 @@ import AuthNavigator from './AuthNavigator';
 import AppNavigator from './AppNavigator';
 import { ROUTES } from './routes';
 
-export default function RootNavigator() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
+export default function RootNavigator() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>

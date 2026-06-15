@@ -2,13 +2,16 @@ import {
   CommonActions,
   createNavigationContainerRef,
 } from '@react-navigation/native';
-import { RootStackParamList } from '../types/navigation/RootStackParamList';
+import {
+  GlobalParamList,
+  RootStackParamList,
+} from '../types/navigation/RootStackParamList';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export const navigate = <RouteName extends keyof RootStackParamList>(
+export const navigate = <RouteName extends keyof GlobalParamList>(
   name: RouteName,
-  params?: RootStackParamList[RouteName],
+  params?: GlobalParamList[RouteName],
 ) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(

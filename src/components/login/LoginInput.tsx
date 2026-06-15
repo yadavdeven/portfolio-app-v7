@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   TextInput as RNTextInput,
   Keyboard,
@@ -17,6 +18,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { inputValidators } from '../../utils/validators';
 import { FONTS } from '../../utils/typography';
 import Colors from '../../constants/Colors';
+import EyeIcon from './EyeIcon';
 
 export type LoginInputRef = {
   focus: () => void;
@@ -48,6 +50,7 @@ const LoginInput = forwardRef<LoginInputRef, LoginInputProps>(
     const [focused, setFocused] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [touched, setTouched] = useState(false); // ✅ track if validation started
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const inputRef = useRef<RNTextInput>(null);
 
@@ -130,7 +133,7 @@ const LoginInput = forwardRef<LoginInputRef, LoginInputProps>(
             returnKeyType={isLastField ? 'done' : returnKeyType}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            secureTextEntry={secureTextEntry}
+            secureTextEntry={secureTextEntry && !passwordVisible}
             onSubmitEditing={handleSubmit}
             textContentType={textContentType}
             autoComplete={autoComplete}
@@ -142,6 +145,19 @@ const LoginInput = forwardRef<LoginInputRef, LoginInputProps>(
               { fontSize: moderateScale(value ? 15 : 14, 0.4) },
             ]}
           />
+          {secureTextEntry && (
+            <TouchableOpacity
+              onPress={() => setPasswordVisible(prev => !prev)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.eyeButton}
+              accessibilityRole="button"
+              accessibilityLabel={
+                passwordVisible ? 'Hide password' : 'Show password'
+              }
+            >
+              <EyeIcon visible={passwordVisible} />
+            </TouchableOpacity>
+          )}
         </View>
         <Text style={styles.err_text}>{error || ''}</Text>
       </View>
@@ -184,6 +200,9 @@ const styles = StyleSheet.create({
     padding: 0,
     color: Colors.grey_primary,
     fontFamily: FONTS.lato_bold,
+  },
+  eyeButton: {
+    paddingLeft: moderateScale(10),
   },
   err_text: {
     marginTop: moderateScale(6),

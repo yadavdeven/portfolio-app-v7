@@ -7,9 +7,9 @@ import { FONTS } from '../utils/typography';
 import Colors from '../constants/Colors';
 import { ROUTES } from './routes';
 
-export default function AuthNavigator() {
-  const Stack = createNativeStackNavigator<AuthStackParamList>();
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 
+export default function AuthNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen

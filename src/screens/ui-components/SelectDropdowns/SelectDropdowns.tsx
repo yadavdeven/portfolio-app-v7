@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import Wrapper from '../../../components/common/Wrapper';
-import InfoBanner from '../../../components/common/InfoBanner';
 import SearchModalDropdown from '../../../components/select-dropdowns/SearchModalDropdown';
+import MultiSelectDropdown from '../../../components/select-dropdowns/MultiSelectDropdown';
+import DropdownStandard from '../../../components/select-dropdowns/DropdownStandard';
+import InfoBanner from '../../../components/common/InfoBanner';
+import Wrapper from '../../../components/common/Wrapper';
 import { STATES } from '../../../data/states';
 import styles from './styles';
-import DropdownStandard from '../../../components/select-dropdowns/DropdownStandard';
-import MultiSelectDropdown from '../../../components/select-dropdowns/MultiSelectDropdown';
 
 const TRANSACTION_TYPES = [
   { label: 'Balance Enquiry', value: 'BE' },

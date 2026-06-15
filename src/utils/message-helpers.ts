@@ -4,14 +4,20 @@ export const getBiometricDisabledMessage = (
   biometricInfo: {
     available: boolean;
     biometryType: string | null | undefined;
+    error?: string;
   },
   type: 'face' | 'fingerprint',
 ) => {
-  const { available, biometryType } = biometricInfo;
+  const { available, biometryType, error } = biometricInfo;
 
   // ❌ No hardware OR not setup
   if (!available) {
-    // 🔥 No hardware at all
+    // ⚠️ Hardware exists but no biometrics enrolled yet
+    if (error === 'BIOMETRIC_ERROR_NONE_ENROLLED') {
+      return 'Please set up biometrics in device settings';
+    }
+
+    // 🔥 No usable hardware (absent, or temporarily unavailable)
     if (!biometryType) {
       return 'Biometric authentication is not supported on this device';
     }

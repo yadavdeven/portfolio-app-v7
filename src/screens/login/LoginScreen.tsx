@@ -37,7 +37,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('markchapman@gmail.com');
   const [password, setPassword] = useState('Password@123');
 
-  // ✅ refs
+  // refs
   const emailRef = useRef<LoginInputRef>(null);
   const passwordRef = useRef<LoginInputRef>(null);
 
@@ -202,7 +202,7 @@ export default function LoginScreen() {
             placeholder="Enter Password"
             value={password}
             onChange={setPassword}
-            // secureTextEntry
+            secureTextEntry
             validateFor="password"
             isRequired
             isLastField
