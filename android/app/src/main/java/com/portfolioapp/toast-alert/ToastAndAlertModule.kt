@@ -1,67 +1,62 @@
 // Needed to specify the package name at the top of the file
 // (native Kotlin / Android requirement)
 package com.portfolioapp
-// almost needed in all modules when the task is asynchronous one 
-// like data is returned, so it can pass or fail 
-// it is not required for synchronous tasks like 
-// @ReactMethod fun showAlert(name: String) 
-// @ReactMethod fun openSettings() 
-// @ReactMethod fun logSomething()
-import android.os.Handler
-import android.os.Looper
+
+// --- Feature-specific (unique to THIS module) ---
+// AlertDialog lives in android.app because a dialog is a window owned by an
+// Activity (the app/UI framework layer) — it needs an Activity context to
+// attach its window to.
+import android.app.AlertDialog
+// Toast lives in android.widget because it's just a small floating view, not a
+// window — it's part of the widgets/views toolkit and only needs any Context.
 import android.widget.Toast
-import com.facebook.react.bridge.Promise
+
+// --- Common to (almost) every native module ---
+// ReactApplicationContext: the RN context handed to the module's constructor.
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
-// need to export methods to be accessible from JS side
+// @ReactMethod: exports a method so it's callable from JS.
 import com.facebook.react.bridge.ReactMethod
+// UiThreadUtil: runs work on the UI thread (required for any UI like dialogs/toasts).
+import com.facebook.react.bridge.UiThreadUtil
 
 /**
- * Native module exposed to React Native.
+ * Legacy (old architecture / bridge) native module.
  *
- * - Uses Promise because data is returned to JS (async task)
- * - Promise is NOT required for fire-and-forget methods like:
- *   @ReactMethod fun showAlert(name: String)
- *   @ReactMethod fun openSettings()
- *   @ReactMethod fun logSomething()
+ * Mirrors the same functionality as [ToastAndAlertModuleTurbo]:
+ * - showAlert(name): fire-and-forget native AlertDialog.
+ * - showToast(name): String: shows a native Toast AND returns the greeting
+ *   string directly. On the old architecture a synchronous return value is
+ *   achieved with `isBlockingSynchronousMethod = true` (the bridge analogue of
+ *   the TurboModule's JSI synchronous call).
  */
 class ToastAndAlertModule(
     reactContext: ReactApplicationContext
 ) : ReactContextBaseJavaModule(reactContext) {
 
-    override fun getName(): String {
-        return "ToastAndAlertModule"
-    }
-
-    @ReactMethod
-    fun greetWithToast(name: String, promise: Promise) {
-        try {
-            val message = "Hello, $name to the portfolio app."
-
-            // Toast.makeText(...).show() must run on the UI thread.
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(reactApplicationContext, message, Toast.LENGTH_SHORT).show()
-            }
-
-            promise.resolve(message)
-        } catch (e: Exception) {
-            promise.reject("GREET_ERROR", e)
-        }
-    }
+    override fun getName(): String = "ToastAndAlertModule"
 
     @ReactMethod
     fun showAlert(name: String) {
-        
-        val activity = reactApplicationContext.currentActivity ?: return
+        UiThreadUtil.runOnUiThread {
+            val activity = reactApplicationContext.currentActivity ?: return@runOnUiThread
 
-        val alertMessage = "Welcome, $name to the portfolio app."
+            val alertMessage = "Welcome, $name to the portfolio app."
 
-        activity.runOnUiThread {
-            android.app.AlertDialog.Builder(activity)
+            AlertDialog.Builder(activity)
                 .setTitle("Alert")
                 .setMessage(alertMessage)
                 .setPositiveButton("OK", null)
                 .show()
         }
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun showToast(name: String): String {
+        val message = "Hello, $name from the portfolio app."
+        UiThreadUtil.runOnUiThread {
+            Toast.makeText(reactApplicationContext, message, Toast.LENGTH_SHORT).show()
+        }
+        return message
     }
 }

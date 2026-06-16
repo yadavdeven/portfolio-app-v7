@@ -7,33 +7,30 @@ import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 
 /**
- * Registers the TurboModule.
+ * Registers the DeviceInfo TurboModule.
  *
- * Unlike the legacy `ReactPackage` (which returns a fixed list from
- * `createNativeModules`), a TurboModule package extends [BaseReactPackage] and
- * provides two things:
  *  - [getModule]: lazily builds the module instance, looked up by name.
  *  - [getReactModuleInfoProvider]: metadata for the TurboModule system. The
- *    crucial flag is the last `true` -> `isTurboModule`, which tells RN to wire
- *    this up over JSI (enabling the synchronous `showToast` call).
+ *    last `true` -> `isTurboModule` wires it over JSI (enabling the synchronous
+ *    `getDeviceInfo` call).
  */
-class ToastAndAlertTurboPackage : BaseReactPackage() {
+class DeviceInfoPackage : BaseReactPackage() {
 
     override fun getModule(
         name: String,
         reactContext: ReactApplicationContext,
     ): NativeModule? =
-        if (name == ToastAndAlertModuleTurbo.NAME) {
-            ToastAndAlertModuleTurbo(reactContext)
+        if (name == DeviceInfoModule.NAME) {
+            DeviceInfoModule(reactContext)
         } else {
             null
         }
 
     override fun getReactModuleInfoProvider() = ReactModuleInfoProvider {
         mapOf(
-            ToastAndAlertModuleTurbo.NAME to ReactModuleInfo(
-                ToastAndAlertModuleTurbo.NAME,             // name (matches getName())
-                ToastAndAlertModuleTurbo::class.java.name, // className (fully-qualified)
+            DeviceInfoModule.NAME to ReactModuleInfo(
+                DeviceInfoModule.NAME,             // name (matches getName())
+                DeviceInfoModule::class.java.name, // className (fully-qualified)
                 false, // canOverrideExistingModule
                 false, // needsEagerInit
                 false, // isCxxModule

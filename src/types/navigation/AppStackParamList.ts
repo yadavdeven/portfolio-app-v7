@@ -9,4 +9,5 @@ export type AppStackParamList = {
   CheckboxAnimationScreen: undefined;
   SelectDropdowns: undefined;
   SSLPinningScreen: undefined;
+  DeviceInfoScreen: undefined;
 };

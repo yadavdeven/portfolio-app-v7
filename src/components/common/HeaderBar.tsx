@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import BackArrowIcon from '../../assets/images/global/arrow_back_ios_24dp_300.svg';
+import BackArrowIcon from '../../assets/images/global/arrow_back_ios_24dp_700.svg';
 import { navigateBack } from '../../navigation/navigation-utils';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
 import { isAndroid } from '../../utils/helper-functions';

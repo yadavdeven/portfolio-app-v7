@@ -8,7 +8,8 @@ import SelectDropdowns from '../screens/ui-components/SelectDropdowns/SelectDrop
 import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScreen';
 import TextEditorScreen from '../screens/features/text-editor/TextEditorScreen';
 import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
-import WelcomeAlertScreen from '../screens/native-modules/welcome-alert';
+import WelcomeAlertScreen from '../screens/native-modules/toast-alert/ToastAndAlertNativeModuleScreen';
+import DeviceInfoScreen from '../screens/native-modules/device-info/DeviceInfoScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
 import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
@@ -43,6 +44,7 @@ export default function AppNavigator() {
         component={SelectDropdowns}
       />
       <Stack.Screen name={ROUTES.SSL_PINNING} component={SSLPinningScreen} />
+      <Stack.Screen name={ROUTES.DEVICE_INFO} component={DeviceInfoScreen} />
     </Stack.Navigator>
   );
 }

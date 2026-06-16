@@ -80,9 +80,8 @@ export const categories: CategorySection[] = [
     id: 'native_modules',
     title: 'Native Modules',
     data: [
-      { id: 'b-1', name: 'Show Welcome Alert', routeTo: 'WelcomeAlertScreen' },
-      { id: 'b-3', name: 'sub3' },
-      { id: 'b-4', name: 'sub4' },
+      { id: 'b-1', name: 'Show Toast & Alert', routeTo: 'WelcomeAlertScreen' },
+      { id: 'b-2', name: 'Device Info', routeTo: 'DeviceInfoScreen' },
     ],
   },
 ];

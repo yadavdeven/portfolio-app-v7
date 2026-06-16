@@ -14,4 +14,5 @@ export const ROUTES = {
   CHECKBOX_ANIMATION: 'CheckboxAnimationScreen',
   SELECT_DROPDOWNS: 'SelectDropdowns',
   SSL_PINNING: 'SSLPinningScreen',
+  DEVICE_INFO: 'DeviceInfoScreen',
 } as const;

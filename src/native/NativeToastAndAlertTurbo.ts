@@ -1,29 +1,25 @@
-// import type { TurboModule } from 'react-native';
-// import { TurboModuleRegistry } from 'react-native';
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
 
-// /**
-//  * Turbo Module spec.
-//  *
-//  * Codegen reads this file (filename is prefixed `Native` and it exports a
-//  * `TurboModuleRegistry` lookup) and generates the abstract Kotlin base class
-//  * `NativeToastAndAlertTurboSpec` that the native module extends.
-//  *
-//  * The name passed to `getEnforcing` ("ToastAndAlertTurbo") must equal the
-//  * native `getName()`.
-//  */
-// export interface Spec extends TurboModule {
-//   /** Async -> returns a value, so it is a Promise on the native side. */
-//   greetWithToast(name: string): Promise<string>;
+/**
+ * Turbo Module spec.
+ *
+ * Codegen reads this file (filename is prefixed `Native` and it exports a
+ * `TurboModuleRegistry` lookup) and generates the abstract Kotlin base class
+ * `NativeToastAndAlertTurboSpec` (filename + "Spec") in package
+ * `com.portfolioapp` (from codegenConfig.android.javaPackageName).
+ *
+ * The string passed to `getEnforcing` MUST equal the native `getName()`.
+ */
+export interface Spec extends TurboModule {
+  /** Fire-and-forget: shows a native Android AlertDialog. */
+  showAlert(name: string): void;
 
-//   /** Fire-and-forget: native AlertDialog (Android). */
-//   showAlert(name: string): void;
+  /**
+   * Synchronous: shows a native Toast AND returns the greeting string
+   * directly (no Promise) — this is the JSI synchronous call.
+   */
+  showToast(name: string): string;
+}
 
-//   /**
-//    * Fire-and-forget: native Android Toast.
-//    * @param isLong true -> Toast.LENGTH_LONG, false -> LENGTH_SHORT
-//    * (avoid `long`: it is a reserved keyword in the generated Java spec)
-//    */
-//   showToast(message: string, isLong: boolean): void;
-// }
-
-// export default TurboModuleRegistry.getEnforcing<Spec>('ToastAndAlertTurbo');
+export default TurboModuleRegistry.getEnforcing<Spec>('ToastAndAlertModuleTurbo');
