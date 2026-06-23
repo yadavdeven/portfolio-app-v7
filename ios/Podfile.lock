@@ -1545,6 +1545,50 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - react-native-document-picker (12.0.1):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - react-native-image-picker (8.2.1):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - react-native-keyboard-controller (1.21.9):
     - hermes-engine
     - RCTRequired
@@ -2229,6 +2273,8 @@ PODS:
     - ReactNativeDependencies
     - RNFBApp
     - Yoga
+  - RNFileViewer (2.1.5):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.28.0):
@@ -2630,6 +2676,8 @@ DEPENDENCIES:
   - React-mutationobservernativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
+  - "react-native-document-picker (from `../node_modules/@react-native-documents/picker`)"
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -2675,6 +2723,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - RNFileViewer (from `../node_modules/react-native-file-viewer`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
@@ -2798,6 +2847,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-biometrics"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
+  react-native-document-picker:
+    :path: "../node_modules/@react-native-documents/picker"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-netinfo:
@@ -2888,6 +2941,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNFileViewer:
+    :path: "../node_modules/react-native-file-viewer"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -2971,6 +3026,8 @@ SPEC CHECKSUMS:
   React-mutationobservernativemodule: a7f3dc483d3e0e0fade0ea00e2cc95e2e462e023
   react-native-biometrics: 43ed5b828646a7862dbc7945556446be00798e7d
   react-native-cameraroll: d7e55dae97acb52c4ce88a32deb02841fa15de12
+  react-native-document-picker: d74eb20980217096d3794a63ee5105b5f70772e3
+  react-native-image-picker: 09cea417bef3ee25008ad21d4426f9a1fc54ad84
   react-native-keyboard-controller: a1a729761011e31eb401097b8b2f30ca8e24d2f2
   react-native-netinfo: a05f9b897e76ad24b53f615fed1cbb731932363d
   react-native-safe-area-context: 690b9dc6cf59e38181d4b7153b5ac372bcd474a6
@@ -3008,7 +3065,7 @@ SPEC CHECKSUMS:
   React-utils: 892f56c9e4e0aeadce0391b181af87f419c41758
   React-webperformancenativemodule: 9d79deafb4623b6f7716abdf38294cd6a2f7d4d7
   ReactAppDependencyProvider: 25c9c516839be2c5e3d3344f95dc7da5f7e63fc2
-  ReactCodegen: b91f7414e2034b49b7c3c36cbf46141e86af802c
+  ReactCodegen: 4f68ec4608fd259323a1bb27a37d92dbd8f52f10
   ReactCommon: 7dfc3250793bf36cf221096ff59e1179e13eef7f
   ReactNativeDependencies: c5024ec2e511bca2b55575d25fbe5440e2c83ae3
   ReactNativeEnriched: 9567759968cb15996414c33499877739f2f23944
@@ -3017,6 +3074,7 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 1a3f0c1606359444b06a3a8e1229c17958599156
   RNFBApp: 7b9f35bc79fcd15ba62d56d80587aa8822d584f1
   RNFBAuth: 7d520e51984dd919d8a564f2b5b58840a9db6cf9
+  RNFileViewer: 4b5d83358214347e4ab2d4ca8d5c1c90d869e251
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: 808acd1a51be1f45b6c28407ef5388354c288b7b
   RNGoogleSignin: c41dfec31c6744ead33e21c86c7f78582e866126
