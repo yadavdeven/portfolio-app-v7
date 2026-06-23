@@ -2,7 +2,8 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
-import Colors from '../../constants/Colors';
+import { Theme } from '../../theme/themes';
+import { useThemedStyles } from '../../theme/ThemeContext';
 import HeaderBar from './HeaderBar';
 
 const Wrapper = ({
@@ -10,15 +11,21 @@ const Wrapper = ({
   children,
   containerStyle,
   scrollView = true,
+  backgroundColor,
 }: {
   headerTitle: string;
   children?: React.ReactNode;
   containerStyle?: any;
   scrollView?: boolean;
+  /** Override the themed screen/header background (e.g. to match a specific screen). */
+  backgroundColor?: string;
 }) => {
+  const styles = useThemedStyles(createStyles);
   return (
-    <SafeAreaView style={styles.container}>
-      <HeaderBar title={headerTitle} bgColor={Colors.bg_600} />
+    <SafeAreaView
+      style={[styles.container, backgroundColor ? { backgroundColor } : null]}
+    >
+      <HeaderBar title={headerTitle} bgColor={backgroundColor} />
       {scrollView ? (
         <ScrollView style={[styles.contentContainer, { ...containerStyle }]}>
           {children}
@@ -34,13 +41,14 @@ const Wrapper = ({
 
 export default Wrapper;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.bg_600,
-  },
-  contentContainer: {
-    flex: 1,
-    padding: moderateScale(16),
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    contentContainer: {
+      flex: 1,
+      padding: moderateScale(16),
+    },
+  });

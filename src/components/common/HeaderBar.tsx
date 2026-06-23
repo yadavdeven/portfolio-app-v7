@@ -6,6 +6,8 @@ import { navigateBack } from '../../navigation/navigation-utils';
 import { DEVICE_WIDTH } from '../../constants/Dimensions';
 import { isAndroid } from '../../utils/helper-functions';
 import { FONTS } from '../../utils/typography';
+import { Theme } from '../../theme/themes';
+import { useTheme, useThemedStyles } from '../../theme/ThemeContext';
 import Colors from '../../constants/Colors';
 
 type HeaderBarProps = {
@@ -14,8 +16,15 @@ type HeaderBarProps = {
 };
 
 const HeaderBar = ({ title, bgColor }: HeaderBarProps) => {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
-    <View style={[styles.container, { backgroundColor: bgColor || 'white' }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: bgColor || theme.colors.background },
+      ]}
+    >
       <TouchableOpacity
         onPress={() => navigateBack()}
         style={styles.back_arrow}
@@ -23,7 +32,7 @@ const HeaderBar = ({ title, bgColor }: HeaderBarProps) => {
         <BackArrowIcon
           height={moderateScale(24, 0.2)}
           width={moderateScale(24, 0.2)}
-          fill={Colors.primary}
+          fill={theme.colors.primary}
         />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
@@ -33,22 +42,23 @@ const HeaderBar = ({ title, bgColor }: HeaderBarProps) => {
 
 export default HeaderBar;
 
-const styles = StyleSheet.create({
-  container: {
-    width: DEVICE_WIDTH,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: isAndroid ? moderateScale(62, 0.2) : moderateScale(54, 0.2),
-    borderBottomWidth: moderateScale(1, 0.2),
-    borderBottomColor: Colors.offWhite_900,
-  },
-  back_arrow: {
-    position: 'absolute',
-    left: moderateScale(16, 0.2),
-  },
-  title: {
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-    fontSize: moderateScale(16, 0.4),
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      width: DEVICE_WIDTH,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: isAndroid ? moderateScale(62, 0.2) : moderateScale(54, 0.2),
+      borderBottomWidth: moderateScale(0.8),
+      borderBottomColor: Colors.primary_800,
+    },
+    back_arrow: {
+      position: 'absolute',
+      left: moderateScale(16, 0.2),
+    },
+    title: {
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.heading,
+      fontSize: moderateScale(16, 0.4),
+    },
+  });

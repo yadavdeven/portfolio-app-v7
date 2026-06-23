@@ -23,6 +23,8 @@ const DeviceInfoScreen = () => {
   const [info, setInfo] = React.useState<DeviceInfoType | null>(null);
 
   const handleGetInfo = () => {
+    // Native side is Android-only for now; bail out gracefully elsewhere.
+    if (!DeviceInfo) return;
     // Synchronous JSI call — returns the object directly, no Promise.
     setInfo(DeviceInfo.getDeviceInfo());
   };

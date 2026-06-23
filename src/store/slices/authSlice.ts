@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { saveAuthCredentials } from '../../api/authStorage';
+import { clearAuthCredentials, saveAuthCredentials } from '../../api/authStorage';
+import { signOutFromSocial } from '../../utils/social-auth';
 import { API_ENDPOINTS } from '../../constants/end-points';
 import { ERROR_MESSAGES } from '../../constants/messages';
 import axiosClient from '../../api/axiosClient';
@@ -119,6 +120,14 @@ export const biometricDisable = createAsyncThunk(
       .then(r => r.data),
 );
 
+// Ends the session: revokes the social/Firebase login and wipes the persisted
+// tokens + guid from the keychain. Each step is best-effort so logout never
+// gets stuck — the slice state is cleared in extraReducers regardless.
+export const logout = createAsyncThunk('auth/logout', async () => {
+  await signOutFromSocial();
+  await clearAuthCredentials();
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -132,6 +141,10 @@ export const authSlice = createSlice({
 
     builder.addCase(googleAuth.fulfilled, (state, action) => {
       state.email = action.payload?.responseData?.email || null;
+    });
+
+    builder.addCase(logout.fulfilled, state => {
+      state.email = null;
     });
   },
 });

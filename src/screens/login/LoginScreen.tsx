@@ -226,6 +226,7 @@ export default function LoginScreen() {
         link="Register"
         linkText="Don't have an account?"
         onLinkPress={() => navigate(ROUTES.REGISTER)}
+        bottom={moderateScale(16)}
       />
     </SafeAreaView>
   );

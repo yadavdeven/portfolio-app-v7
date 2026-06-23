@@ -14,6 +14,8 @@ import Colors from '../../constants/Colors';
 type AppToastProps = {
   text: string;
   type?: 'info' | 'error' | 'default';
+  /** White surface with the type color applied to the text instead of the bg. */
+  light?: boolean;
   onHide?: () => void;
   duration?: number; // ms
   positionFromBottom?: number;
@@ -26,16 +28,21 @@ const OFFSET = dynamicHeight(20);
 export default function AppToast({
   text,
   type = 'default',
+  light = false,
   onHide,
   duration = 3000, // default duration
   positionFromBottom = DEVICE_HEIGHT * 0.2,
 }: AppToastProps) {
-  const bgColor =
+  const typeColor =
     type === 'info'
       ? '#FFB300'
       : type === 'error'
       ? Colors.error
       : Colors.primary_200;
+
+  // Light variant flips it: white surface with the type color on the text.
+  const bgColor = light ? Colors.white : typeColor;
+  const textColor = light ? typeColor : Colors.white;
 
   // Drive the animation manually instead of using Reanimated's declarative
   // entering/exiting layout animations: those are unreliable on Android (the
@@ -82,11 +89,12 @@ export default function AppToast({
     <Animated.View
       style={[
         styles.container,
+        light && styles.lightContainer,
         { backgroundColor: bgColor, bottom: positionFromBottom },
         animatedStyle,
       ]}
     >
-      <Text style={styles.text}>{text}</Text>
+      <Text style={[styles.text, { color: textColor }]}>{text}</Text>
     </Animated.View>
   );
 }
@@ -101,9 +109,17 @@ const styles = StyleSheet.create({
     zIndex: 9999,
     elevation: 5,
   },
+  // White toasts need a hairline + softer shadow so they read against the screen.
+  lightContainer: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.bg_400,
+    shadowColor: Colors.grey_500,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
   text: {
     fontFamily: FONTS.lato_bold,
     fontSize: dynamicHeight(16),
-    color: 'white',
   },
 });

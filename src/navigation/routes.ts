@@ -1,5 +1,7 @@
 export const ROUTES = {
   APP_NAVIGATOR: 'AppNavigator',
+  APP_DRAWER: 'AppDrawer',
+  APP_STACK: 'AppStack',
   AUTH_NAVIGATOR: 'AuthNavigator',
   SPLASH: 'SplashScreen',
   LOGIN: 'LoginScreen',
@@ -15,4 +17,5 @@ export const ROUTES = {
   SELECT_DROPDOWNS: 'SelectDropdowns',
   SSL_PINNING: 'SSLPinningScreen',
   DEVICE_INFO: 'DeviceInfoScreen',
+  FIREBASE_STORAGE: 'FirebaseStorageScreen',
 } as const;

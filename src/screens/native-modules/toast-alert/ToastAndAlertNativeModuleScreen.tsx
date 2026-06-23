@@ -25,6 +25,10 @@ const ToastAndAlertNativeModuleScreen = () => {
 
   const handleShowAlert = () => {
     if (!validate()) return;
+    if (!ToastAndAlertTurbo) {
+      showToast('Native module not available on this platform yet');
+      return;
+    }
     try {
       ToastAndAlertTurbo.showAlert(name);
     } catch (err) {
@@ -35,6 +39,10 @@ const ToastAndAlertNativeModuleScreen = () => {
 
   const handleShowToast = () => {
     if (!validate()) return;
+    if (!ToastAndAlertTurbo) {
+      showToast('Native module not available on this platform yet');
+      return;
+    }
     try {
       // Synchronous JSI call. The native module itself shows the Toast and
       // returns the greeting string — so we DON'T also call the JS `showToast`

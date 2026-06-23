@@ -4,7 +4,12 @@ import AppToast from '../components/common/AppToast';
 type ToastType = 'info' | 'error' | 'default';
 
 type ToastContextType = {
-  showToast: (text: string, type?: ToastType, duration?: number) => void;
+  showToast: (
+    text: string,
+    type?: ToastType,
+    duration?: number,
+    light?: boolean
+  ) => void;
   hideToast: () => void;
 };
 
@@ -15,14 +20,16 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     text: string;
     type: ToastType;
     duration?: number;
+    light?: boolean;
   } | null>(null);
 
   const showToast = (
     text: string,
     type: ToastType = 'default',
-    duration = 3000
+    duration = 3000,
+    light = false
   ) => {
-    setToast({ text, type, duration });
+    setToast({ text, type, duration, light });
   };
 
   const hideToast = () => {
@@ -39,6 +46,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
           text={toast.text}
           type={toast.type}
           duration={toast.duration}
+          light={toast.light}
           onHide={hideToast}
         />
       )}

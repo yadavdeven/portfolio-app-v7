@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from './ToastProvider';
+import { ThemeProvider } from '../theme/ThemeContext';
 import { applyPinningFromPreference } from '../utils/ssl-pinning';
 
 type Props = {
@@ -19,9 +20,11 @@ export const AppProvider = ({ children }: Props) => {
 
   return (
     <SafeAreaProvider>
-      <KeyboardProvider>
-        <ToastProvider>{children}</ToastProvider>
-      </KeyboardProvider>
+      <ThemeProvider>
+        <KeyboardProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </KeyboardProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 };

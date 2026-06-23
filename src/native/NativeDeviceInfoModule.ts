@@ -1,5 +1,5 @@
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { Platform, TurboModuleRegistry } from 'react-native';
 
 /**
  * Shape returned by `getDeviceInfo`. Codegen maps this object type to a
@@ -30,4 +30,10 @@ export interface Spec extends TurboModule {
   getDeviceInfo(): DeviceInfo;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('DeviceInfoModule');
+// The native side is only implemented on Android for now. On iOS `getEnforcing`
+// would throw at import time ("module could not be found"), crashing the app at
+// startup, so guard the lookup and export `null` there until the iOS TurboModule
+// is written. Call sites must null-check the default export.
+export default Platform.OS === 'android'
+  ? TurboModuleRegistry.getEnforcing<Spec>('DeviceInfoModule')
+  : null;

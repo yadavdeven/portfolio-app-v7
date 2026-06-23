@@ -3,7 +3,7 @@ import { clearAuthCredentials, getAuthCredentials } from './authStorage';
 import { resetNavigation } from '../navigation/navigation-utils';
 import { ERROR_MESSAGES } from '../constants/messages';
 import NetInfo from '@react-native-community/netinfo';
-import { refreshAccessToken } from './authApi';
+import { refreshAccessToken } from './authRefreshToken';
 import { ROUTES } from '../navigation/routes';
 import { BASE_API_URL } from '@env';
 
@@ -19,12 +19,12 @@ declare module 'axios' {
 // Local backend used for SSL-pinning testing. `localhost` won't resolve from a
 // real device or emulator, so point at the dev machine's LAN IP (update this to
 // match your machine; Android emulator can also use http://10.0.2.2:5002).
-const LOCAL_BASE_URL = 'http://192.168.1.24:5002/api/v1';
+const LOCAL_BASE_URL = 'http://192.168.2.4:5002/api/v1';
 
 // Toggle for local-vs-deployed backend: set USE_LOCAL_BACKEND to false to fall
 // back to the deployed env URL. Referencing BASE_API_URL here also keeps the
 // import in use either way.
-const USE_LOCAL_BACKEND = false;
+const USE_LOCAL_BACKEND = true; // set to true to test local backend (SSL pinning)
 const baseURL = USE_LOCAL_BACKEND ? LOCAL_BASE_URL : BASE_API_URL;
 // Single shared axios instance for all API calls so config (base URL, timeout,
 // headers, and any future interceptors) lives in one place.
@@ -42,10 +42,14 @@ const axiosClient = axios.create({
 // Attach access token + x-guid from keychain to every request.
 axiosClient.interceptors.request.use(async config => {
   console.log('Base URL:', config.baseURL, 'Endpoint:', config.url);
+
+  // ── STEP 1: internet check FIRST, on its own. Nothing about the server is
+  // considered here — if the device has no connectivity we fail fast with a
+  // "no internet" error before even attempting the request.
+  // NOTE: unreliable on the iOS Simulator (its `isConnected` flag stays true
+  // even with the host offline); verify offline behavior on a real device/APK.
   const netInfo = await NetInfo.fetch();
-  const isOffline =
-    !netInfo.isConnected || netInfo.isInternetReachable === false;
-  if (isOffline) {
+  if (netInfo.isConnected === false || netInfo.isInternetReachable === false) {
     return Promise.reject(new Error(ERROR_MESSAGES.NETWORK_ERROR));
   }
 
@@ -80,8 +84,22 @@ axiosClient.interceptors.response.use(
       ) {
         return Promise.reject(new Error(ERROR_MESSAGES.TIMEOUT));
       }
+      // ERR_NETWORK is ambiguous: axios reports it both for a genuine internet
+      // drop AND for a reachable network where the server refused the connection
+      // (down/refused/DNS/SSL-pin). Re-check NetInfo to tell them apart — only
+      // call it "no internet" when the device is actually offline; otherwise the
+      // network is fine and the server is the problem.
       if (error.code === 'ERR_NETWORK') {
-        return Promise.reject(new Error(ERROR_MESSAGES.NETWORK_ERROR));
+        const netInfo = await NetInfo.fetch();
+        const isOffline =
+          !netInfo.isConnected || netInfo.isInternetReachable === false;
+        return Promise.reject(
+          new Error(
+            isOffline
+              ? ERROR_MESSAGES.NETWORK_ERROR
+              : ERROR_MESSAGES.SERVER_UNREACHABLE,
+          ),
+        );
       }
       return Promise.reject(new Error(ERROR_MESSAGES.SERVER_UNREACHABLE));
     }

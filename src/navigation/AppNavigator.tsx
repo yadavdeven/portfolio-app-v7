@@ -2,17 +2,18 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../types/navigation/AppStackParamList';
 import FileSaveAndDownloadScreen from '../screens/files-features/FileSaveAndDownload/FileSaveAndDownloadScreen';
+import WelcomeAlertScreen from '../screens/native-modules/toast-alert/ToastAndAlertNativeModuleScreen';
+import FirebaseStorageScreen from '../screens/files-features/FirebaseStorage/FirebaseStorageScreen';
 import ScrollAnimationScreen from '../screens/animations/ScrollAnimation/ScrollAnimationScreen';
 import CheckboxAnimationScreen from '../screens/animations/Checkbox/CheckboxAnimationScreen';
 import SelectDropdowns from '../screens/ui-components/SelectDropdowns/SelectDropdowns';
+import DeviceInfoScreen from '../screens/native-modules/device-info/DeviceInfoScreen';
 import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScreen';
 import TextEditorScreen from '../screens/features/text-editor/TextEditorScreen';
+import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
 import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
-import WelcomeAlertScreen from '../screens/native-modules/toast-alert/ToastAndAlertNativeModuleScreen';
-import DeviceInfoScreen from '../screens/native-modules/device-info/DeviceInfoScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
-import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -45,6 +46,10 @@ export default function AppNavigator() {
       />
       <Stack.Screen name={ROUTES.SSL_PINNING} component={SSLPinningScreen} />
       <Stack.Screen name={ROUTES.DEVICE_INFO} component={DeviceInfoScreen} />
+      <Stack.Screen
+        name={ROUTES.FIREBASE_STORAGE}
+        component={FirebaseStorageScreen}
+      />
     </Stack.Navigator>
   );
 }

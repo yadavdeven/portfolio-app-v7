@@ -15,10 +15,7 @@ export const navigate = <RouteName extends keyof GlobalParamList>(
 ) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
-      CommonActions.navigate({
-        name: name as string,
-        params,
-      }),
+      CommonActions.navigate(name as string, params),
     );
   }
 };

@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
+import sslPinningReducer from './slices/sslPinningSlice';
 import ordersSlice from './slices/ordersSlice';
+import driveReducer from './slices/driveSlice';
 import authReducer from './slices/authSlice';
 import appReducer from './slices/appSlice';
-import sslPinningReducer from './slices/sslPinningSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     app: appReducer,
     orders: ordersSlice,
     sslPinning: sslPinningReducer,
+    drive: driveReducer,
   },
 });
 

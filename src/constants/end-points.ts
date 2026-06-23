@@ -10,4 +10,10 @@ export const API_ENDPOINTS = {
   BIOMETRIC_LOGIN_VERIFY: 'auth/biometric/login/verify',
   BIOMETRIC_DISABLE: 'auth/biometric/disable',
   SSL_PINNING_ECHO: 'ssl-pinning/echo-request',
+  DRIVE_ROOT: 'drive/root',
+  DRIVE_FOLDERS: 'drive/folders',
+  DRIVE_FILES: 'drive/files',
+  DRIVE_ITEMS: 'drive/items',
+  DRIVE_UPLOADS_REQUEST: 'drive/uploads/request',
+  DRIVE_UPLOADS_CONFIRM: 'drive/uploads/confirm',
 };

@@ -11,12 +11,8 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 export default function AuthNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={ROUTES.LOGIN}
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
       <Stack.Screen
         name={ROUTES.REGISTER}
         component={RegisterScreen}

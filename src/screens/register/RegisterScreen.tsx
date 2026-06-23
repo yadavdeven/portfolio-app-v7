@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import {
   navigateBack,
   resetNavigation,
@@ -10,10 +10,11 @@ import SocialSignInIcons from '../../components/login/SocialSignInBtns';
 import BlankScreenModal from '../../components/common/BlankScreenModal';
 import ButtonStandard from '../../components/common/ButtonStandard';
 import { googleAuth, register } from '../../store/slices/authSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Wrapper from '../../components/common/Wrapper';
 import { SUCCESS_MESSAGES } from '../../constants/messages';
 import BottomText from '../../components/login/BottomText';
 import { moderateScale } from 'react-native-size-matters';
+import Colors from '../../constants/Colors';
 import { useToast } from '../../providers/ToastProvider';
 import { delay } from '../../utils/helper-functions';
 import { useAppDispatch } from '../../store/hooks';
@@ -146,10 +147,18 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      <BlankScreenModal showModal={isLoading} />
-      <KeyboardAwareScrollView bottomOffset={moderateScale(32)}>
-        <View style={styles.contentContainer}>
+    <>
+      <Wrapper
+        headerTitle="Create Account"
+        scrollView={false}
+        containerStyle={styles.wrapperContent}
+        backgroundColor={Colors.bg_700}
+      >
+        <BlankScreenModal showModal={isLoading} />
+        <KeyboardAwareScrollView
+          bottomOffset={moderateScale(100)}
+          contentContainerStyle={styles.contentContainer}
+        >
           <LoginInput
             ref={nameRef}
             inputLabel="Name"
@@ -207,6 +216,7 @@ export default function RegisterScreen() {
           />
           <LoginInput
             ref={confirmPasswordRef}
+            marginBottom={10}
             inputLabel="Confirm Password"
             value={form.confirmPassword}
             onChange={handleChange('confirmPassword')}
@@ -228,13 +238,14 @@ export default function RegisterScreen() {
           />
           <Text style={styles.orText}>OR</Text>
           <SocialSignInIcons verifyFirebaseIdToken={handleGoogleAuth} />
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </Wrapper>
       <BottomText
         link="Login"
         linkText="Already have an account?"
         onLinkPress={navigateBack}
+        bottom={moderateScale(8)}
       />
-    </SafeAreaView>
+    </>
   );
 }

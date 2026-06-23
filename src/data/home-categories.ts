@@ -52,7 +52,11 @@ export const categories: CategorySection[] = [
         name: 'File Save & Share',
         routeTo: 'FileSaveAndDownloadScreen',
       },
-      { id: 'd-2', name: 'Firebase Upload' },
+      {
+        id: 'd-2',
+        name: 'Firebase Storage',
+        routeTo: 'FirebaseStorageScreen',
+      },
       { id: 'd-3', name: 'AWS S3 Bucket Upload' },
       { id: 'd-4', name: 'Download & View Files Firebase' },
       { id: 'd-5', name: 'Download & View Files AWS' },

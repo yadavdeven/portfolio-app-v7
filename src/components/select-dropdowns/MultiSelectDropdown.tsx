@@ -10,8 +10,9 @@ import {
 import Modal from 'react-native-modal';
 import { moderateScale } from 'react-native-size-matters';
 import Svg, { Path } from 'react-native-svg';
-import Colors from '../../constants/Colors';
 import { FONTS } from '../../utils/typography';
+import { Theme } from '../../theme/themes';
+import { useTheme, useThemedStyles } from '../../theme/ThemeContext';
 import ArrowDownIcon from './ArrowDownIcon';
 import SearchBar from '../common/SearchBar';
 import type { DropdownItem } from './SearchModalDropdown';
@@ -33,10 +34,7 @@ type MultiSelectDropdownProps = {
   searchPlaceholder?: string;
 };
 
-const ItemSeparator = () => <View style={styles.separator} />;
-const ListEmpty = () => <Text style={styles.empty}>No results found</Text>;
-
-const CheckMark = () => (
+const CheckMark = ({ color }: { color: string }) => (
   <Svg
     width={moderateScale(14)}
     height={moderateScale(14)}
@@ -45,7 +43,7 @@ const CheckMark = () => (
   >
     <Path
       d="M5 12l5 5 9-11"
-      stroke={Colors.white}
+      stroke={color}
       strokeWidth={3.5}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -75,6 +73,10 @@ const MultiSelectDropdown = ({
   modalTitle,
   searchPlaceholder = 'Search',
 }: MultiSelectDropdownProps) => {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const ItemSeparator = () => <View style={styles.separator} />;
+  const ListEmpty = () => <Text style={styles.empty}>No results found</Text>;
   const [search, setSearch] = useState('');
   const [tempSelected, setTempSelected] = useState<Set<string>>(
     () => new Set(values ?? []),
@@ -153,7 +155,7 @@ const MultiSelectDropdown = ({
           {item.label}
         </Text>
         <View style={[styles.checkbox, selected && styles.checkboxSelected]}>
-          {selected && <CheckMark />}
+          {selected && <CheckMark color={theme.colors.onSurfaceVariant} />}
         </View>
       </TouchableOpacity>
     );
@@ -178,7 +180,7 @@ const MultiSelectDropdown = ({
         >
           {hasValue ? displayValue : placeholder}
         </Text>
-        <ArrowDownIcon />
+        <ArrowDownIcon color={theme.colors.primary} />
       </TouchableOpacity>
 
       <Modal
@@ -246,167 +248,165 @@ const MultiSelectDropdown = ({
 
 export default MultiSelectDropdown;
 
-const styles = StyleSheet.create({
-  wrapper: {
-    width: '100%',
-  },
-  label: {
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-    marginBottom: moderateScale(8),
-  },
-  labelCount: {
-    color: Colors.primary_200,
-  },
-  field: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.white,
-    borderRadius: moderateScale(8),
-    paddingHorizontal: moderateScale(14),
-    height: moderateScale(48),
-    shadowColor: Colors.grey_500,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  value: {
-    flex: 1,
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-    marginRight: moderateScale(8),
-  },
-  placeholder: {
-    color: Colors.grey_600,
-    fontFamily: FONTS.lato_bold,
-    fontSize: moderateScale(14, 0.4),
-  },
-  modal: {
-    justifyContent: 'flex-end',
-    margin: 0,
-  },
-  sheet: {
-    backgroundColor: Colors.bg_600,
-    borderTopLeftRadius: moderateScale(20),
-    borderTopRightRadius: moderateScale(20),
-    paddingHorizontal: moderateScale(16),
-    paddingBottom: moderateScale(16),
-    height: '92%',
-  },
-  handle: {
-    alignSelf: 'center',
-    width: moderateScale(40),
-    height: moderateScale(4),
-    borderRadius: moderateScale(2),
-    backgroundColor: Colors.grey_700,
-    marginTop: moderateScale(12),
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: moderateScale(16),
-    paddingHorizontal: moderateScale(4),
-  },
-  modalTitle: {
-    fontSize: moderateScale(16, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-  },
-  close: {
-    fontSize: moderateScale(13, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary_200,
-  },
-  searchBar: {
-    marginTop: moderateScale(16),
-    marginBottom: moderateScale(16),
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingBottom: moderateScale(12),
-  },
-  item: {
-    height: ITEM_HEIGHT,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.white,
-    paddingHorizontal: moderateScale(14),
-  },
-  itemText: {
-    flex: 1,
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.grey_100,
-    marginRight: moderateScale(12),
-  },
-  itemTextSelected: {
-    color: Colors.primary,
-  },
-  checkbox: {
-    width: moderateScale(20),
-    height: moderateScale(20),
-    borderRadius: moderateScale(4),
-    borderWidth: 1.5,
-    borderColor: Colors.grey_700,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.white,
-  },
-  checkboxSelected: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  separator: {
-    height: SEPARATOR_HEIGHT,
-    backgroundColor: Colors.bg_500,
-  },
-  empty: {
-    textAlign: 'center',
-    paddingVertical: moderateScale(24),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.grey_500,
-    fontSize: moderateScale(13, 0.4),
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: moderateScale(12),
-    paddingBottom: moderateScale(12),
-  },
-  clearBtn: {
-    height: moderateScale(38),
-    paddingHorizontal: moderateScale(22),
-    borderRadius: moderateScale(7),
-    borderWidth: 1,
-    borderColor: Colors.primary_400,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.white,
-  },
-  clearText: {
-    fontSize: moderateScale(13.5, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-  },
-  applyBtn: {
-    height: moderateScale(38),
-    paddingHorizontal: moderateScale(26),
-    borderRadius: moderateScale(7),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.primary,
-  },
-  applyText: {
-    fontSize: moderateScale(13.5, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.white,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    wrapper: {
+      width: '100%',
+    },
+    label: {
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.heading,
+      marginBottom: moderateScale(8),
+    },
+    labelCount: {
+      color: theme.colors.textSecondary,
+    },
+    field: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: theme.colors.surface,
+      borderRadius: moderateScale(8),
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      paddingHorizontal: moderateScale(14),
+      height: moderateScale(48),
+    },
+    value: {
+      flex: 1,
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.text,
+      marginRight: moderateScale(8),
+    },
+    placeholder: {
+      color: theme.colors.placeholder,
+      fontFamily: FONTS.lato_bold,
+      fontSize: moderateScale(14, 0.4),
+    },
+    modal: {
+      justifyContent: 'flex-end',
+      margin: 0,
+    },
+    sheet: {
+      backgroundColor: theme.colors.sheetBackground,
+      borderTopLeftRadius: moderateScale(20),
+      borderTopRightRadius: moderateScale(20),
+      paddingHorizontal: moderateScale(16),
+      paddingBottom: moderateScale(16),
+      height: '92%',
+    },
+    handle: {
+      alignSelf: 'center',
+      width: moderateScale(40),
+      height: moderateScale(4),
+      borderRadius: moderateScale(2),
+      backgroundColor: theme.colors.border,
+      marginTop: moderateScale(12),
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: moderateScale(16),
+      paddingHorizontal: moderateScale(4),
+    },
+    modalTitle: {
+      fontSize: moderateScale(16, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.heading,
+    },
+    close: {
+      fontSize: moderateScale(13, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.primary,
+    },
+    searchBar: {
+      marginTop: moderateScale(16),
+      marginBottom: moderateScale(16),
+    },
+    list: {
+      flex: 1,
+    },
+    listContent: {
+      paddingBottom: moderateScale(12),
+    },
+    item: {
+      height: ITEM_HEIGHT,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: theme.colors.surface,
+      paddingHorizontal: moderateScale(14),
+    },
+    itemText: {
+      flex: 1,
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.text,
+      marginRight: moderateScale(12),
+    },
+    itemTextSelected: {
+      color: theme.colors.primary,
+    },
+    checkbox: {
+      width: moderateScale(20),
+      height: moderateScale(20),
+      borderRadius: moderateScale(4),
+      borderWidth: 1.5,
+      borderColor: theme.colors.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.surface,
+    },
+    checkboxSelected: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+    },
+    separator: {
+      height: SEPARATOR_HEIGHT,
+      backgroundColor: theme.colors.border,
+    },
+    empty: {
+      textAlign: 'center',
+      paddingVertical: moderateScale(24),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.textSecondary,
+      fontSize: moderateScale(13, 0.4),
+    },
+    actions: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingTop: moderateScale(12),
+      paddingBottom: moderateScale(12),
+    },
+    clearBtn: {
+      height: moderateScale(38),
+      paddingHorizontal: moderateScale(22),
+      borderRadius: moderateScale(7),
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.surface,
+    },
+    clearText: {
+      fontSize: moderateScale(13.5, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.primary,
+    },
+    applyBtn: {
+      height: moderateScale(38),
+      paddingHorizontal: moderateScale(26),
+      borderRadius: moderateScale(7),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.primary,
+    },
+    applyText: {
+      fontSize: moderateScale(13.5, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.onSurfaceVariant,
+    },
+  });

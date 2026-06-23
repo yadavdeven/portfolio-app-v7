@@ -10,16 +10,16 @@ export default function BottomText({
   linkText,
   link,
   onLinkPress,
+  bottom,
 }: {
   linkText: string;
   link: string;
   onLinkPress: () => void;
+  bottom: number;
 }) {
   const insets = useSafeAreaInsets();
   return (
-    <View
-      style={[styles.container, { bottom: insets.bottom + moderateScale(16) }]}
-    >
+    <View style={[styles.container, { bottom: insets.bottom + bottom }]}>
       <Text style={styles.text1}>{linkText}</Text>
       <TouchableOpacity onPress={onLinkPress}>
         <Text style={styles.text2}>{link}</Text>

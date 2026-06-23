@@ -21,6 +21,28 @@ const ensureGoogleConfigured = () => {
 };
 
 /**
+ * Tears down the current session at the provider level: revokes the native
+ * Google session (so the next sign-in re-prompts the account picker) and signs
+ * the user out of Firebase. Both steps are best-effort — a user who logged in
+ * with email/password has no Google/Firebase session, so failures here are
+ * swallowed and never block logout. Clearing the local keychain is the caller's
+ * responsibility (see clearAuthCredentials).
+ */
+export const signOutFromSocial = async (): Promise<void> => {
+  try {
+    ensureGoogleConfigured();
+    await GoogleSignin.signOut();
+  } catch (error) {
+    console.log('Google sign-out skipped:', error);
+  }
+  try {
+    await auth().signOut();
+  } catch (error) {
+    console.log('Firebase sign-out skipped:', error);
+  }
+};
+
+/**
  * Runs the native Google account picker and exchanges the Google ID token for a
  * Firebase credential.
  *

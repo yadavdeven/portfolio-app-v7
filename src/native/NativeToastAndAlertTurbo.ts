@@ -1,5 +1,5 @@
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { Platform, TurboModuleRegistry } from 'react-native';
 
 /**
  * Turbo Module spec.
@@ -22,4 +22,10 @@ export interface Spec extends TurboModule {
   showToast(name: string): string;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('ToastAndAlertModuleTurbo');
+// The native side is only implemented on Android for now. On iOS `getEnforcing`
+// would throw at import time ("module could not be found"), crashing the app at
+// startup, so guard the lookup and export `null` there until the iOS TurboModule
+// is written. Call sites must null-check the default export.
+export default Platform.OS === 'android'
+  ? TurboModuleRegistry.getEnforcing<Spec>('ToastAndAlertModuleTurbo')
+  : null;

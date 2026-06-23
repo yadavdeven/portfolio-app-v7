@@ -12,8 +12,9 @@ import {
 import Modal from 'react-native-modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
-import Colors from '../../constants/Colors';
 import { FONTS } from '../../utils/typography';
+import { Theme } from '../../theme/themes';
+import { useTheme, useThemedStyles } from '../../theme/ThemeContext';
 import ArrowDownIcon from './ArrowDownIcon';
 import type { DropdownItem } from './SearchModalDropdown';
 
@@ -41,8 +42,6 @@ type DropdownStandardProps = {
   onSelect?: (item: DropdownItem) => void;
 };
 
-const ItemSeparator = () => <View style={styles.separator} />;
-
 const computeListHeight = (count: number) =>
   count * ITEM_HEIGHT + Math.max(0, count - 1) * SEPARATOR_HEIGHT;
 
@@ -54,6 +53,9 @@ const DropdownStandard = ({
   data = [],
   onSelect,
 }: DropdownStandardProps) => {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const ItemSeparator = () => <View style={styles.separator} />;
   const anchorRef = useRef<View>(null);
   const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
@@ -148,7 +150,7 @@ const DropdownStandard = ({
           >
             {hasValue ? value : placeholder}
           </Text>
-          <ArrowDownIcon />
+          <ArrowDownIcon color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -198,76 +200,76 @@ const DropdownStandard = ({
 
 export default DropdownStandard;
 
-const styles = StyleSheet.create({
-  wrapper: {
-    width: '100%',
-  },
-  label: {
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-    marginBottom: moderateScale(8),
-  },
-  field: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.white,
-    borderRadius: moderateScale(8),
-    paddingHorizontal: moderateScale(14),
-    height: moderateScale(48),
-    shadowColor: Colors.grey_500,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  value: {
-    flex: 1,
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.primary,
-    marginRight: moderateScale(8),
-  },
-  placeholder: {
-    color: Colors.grey_600,
-    fontFamily: FONTS.lato_bold,
-    fontSize: moderateScale(14, 0.4),
-  },
-  modal: {
-    margin: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  absolute: {
-    position: 'absolute',
-  },
-  dropdown: {
-    backgroundColor: Colors.white,
-    borderRadius: moderateScale(8),
-    overflow: 'hidden',
-    shadowColor: Colors.grey_500,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 6,
-  },
-  item: {
-    height: ITEM_HEIGHT,
-    justifyContent: 'center',
-    paddingHorizontal: moderateScale(14),
-    backgroundColor: Colors.white,
-  },
-  itemText: {
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.lato_bold,
-    color: Colors.grey_100,
-  },
-  itemTextSelected: {
-    color: Colors.primary,
-  },
-  separator: {
-    height: SEPARATOR_HEIGHT,
-    backgroundColor: Colors.bg_500,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    wrapper: {
+      width: '100%',
+    },
+    label: {
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.heading,
+      marginBottom: moderateScale(8),
+    },
+    field: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: theme.colors.surface,
+      borderRadius: moderateScale(8),
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      paddingHorizontal: moderateScale(14),
+      height: moderateScale(48),
+    },
+    value: {
+      flex: 1,
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.text,
+      marginRight: moderateScale(8),
+    },
+    placeholder: {
+      color: theme.colors.placeholder,
+      fontFamily: FONTS.lato_bold,
+      fontSize: moderateScale(14, 0.4),
+    },
+    modal: {
+      margin: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    absolute: {
+      position: 'absolute',
+    },
+    dropdown: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: moderateScale(8),
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+      elevation: 6,
+    },
+    item: {
+      height: ITEM_HEIGHT,
+      justifyContent: 'center',
+      paddingHorizontal: moderateScale(14),
+      backgroundColor: theme.colors.surface,
+    },
+    itemText: {
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.lato_bold,
+      color: theme.colors.text,
+    },
+    itemTextSelected: {
+      color: theme.colors.primary,
+    },
+    separator: {
+      height: SEPARATOR_HEIGHT,
+      backgroundColor: theme.colors.border,
+    },
+  });

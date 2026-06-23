@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    paddingTop: isIOS ? moderateScale(125, 0.2) : moderateScale(150, 0.2),
+    paddingTop: isIOS ? moderateScale(120, 0.2) : moderateScale(150, 0.2),
     paddingHorizontal: moderateScale(20),
     paddingBottom: 0,
   },

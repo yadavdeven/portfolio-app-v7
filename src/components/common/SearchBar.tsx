@@ -4,7 +4,8 @@ import SearchSvg from '../../assets/svgs/search_24dp_300.svg';
 import CancelSvg from '../../assets/svgs/cancel_24dp_300.svg';
 import { moderateScale } from 'react-native-size-matters';
 import { FONTS } from '../../utils/typography';
-import Colors from '../../constants/Colors';
+import { Theme } from '../../theme/themes';
+import { useTheme, useThemedStyles } from '../../theme/ThemeContext';
 
 type Props = {
   value: string;
@@ -21,7 +22,9 @@ export default function SearchBar({
   placeholder,
   onSearchPress,
 }: Props) {
-  
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
+
   const showCancel = value?.length > 0;
   return (
     <View style={[styles.container, containerStyle]}>
@@ -30,14 +33,14 @@ export default function SearchBar({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder || 'Search'}
-        placeholderTextColor={Colors.primary_500}
+        placeholderTextColor={theme.colors.placeholder}
         autoCorrect={false}
         autoComplete="off"
       />
       {showCancel && (
         <TouchableOpacity onPress={() => onChangeText('')}>
           <CancelSvg
-            fill={Colors.grey_300}
+            fill={theme.colors.textSecondary}
             width={moderateScale(20)}
             height={moderateScale(20)}
           />
@@ -45,7 +48,7 @@ export default function SearchBar({
       )}
       <TouchableOpacity onPress={onSearchPress}>
         <SearchSvg
-          fill={Colors.primary_100}
+          fill={theme.colors.primary}
           width={moderateScale(22)}
           height={moderateScale(22)}
         />
@@ -54,23 +57,26 @@ export default function SearchBar({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: moderateScale(40),
-    backgroundColor: Colors.white,
-    borderRadius: moderateScale(8),
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: moderateScale(12),
-    columnGap: moderateScale(8),
-    marginTop: moderateScale(16),
-    marginBottom: moderateScale(16),
-  },
-  input: {
-    flex: 1,
-    fontSize: moderateScale(14, 0.4),
-    fontFamily: FONTS.geom_medium,
-    color: Colors.primary_100,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: moderateScale(40),
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: moderateScale(8),
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: moderateScale(12),
+      columnGap: moderateScale(8),
+      marginTop: moderateScale(16),
+      marginBottom: moderateScale(16),
+    },
+    input: {
+      flex: 1,
+      fontSize: moderateScale(14, 0.4),
+      fontFamily: FONTS.geom_medium,
+      color: theme.colors.text,
+    },
+  });
