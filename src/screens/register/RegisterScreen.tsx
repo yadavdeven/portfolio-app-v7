@@ -29,7 +29,6 @@ export default function RegisterScreen() {
   const mobileRef = useRef<LoginInputRef>(null);
   const emailRef = useRef<LoginInputRef>(null);
   const passwordRef = useRef<LoginInputRef>(null);
-  const confirmPasswordRef = useRef<LoginInputRef>(null);
 
   const { showToast } = useToast();
 
@@ -40,7 +39,6 @@ export default function RegisterScreen() {
     mobile: '',
     email: '',
     password: '',
-    confirmPassword: '',
   });
 
   const handleChange = (field: keyof typeof form) => (value: string) =>
@@ -52,16 +50,8 @@ export default function RegisterScreen() {
     const mobileValid = mobileRef.current?.validate();
     const emailValid = emailRef.current?.validate();
     const passwordValid = passwordRef.current?.validate();
-    const confirmPasswordValid = confirmPasswordRef.current?.validate();
 
-    if (
-      !nameValid ||
-      !mobileValid ||
-      !emailValid ||
-      !passwordValid ||
-      !confirmPasswordValid ||
-      form.password !== form.confirmPassword
-    ) {
+    if (!nameValid || !mobileValid || !emailValid || !passwordValid) {
       return;
     }
     setIsLoading(true);
@@ -212,21 +202,6 @@ export default function RegisterScreen() {
             autoComplete="off"
             validateFor="password"
             isRequired
-            onSubmitEditing={() => confirmPasswordRef.current?.focus()}
-          />
-          <LoginInput
-            ref={confirmPasswordRef}
-            marginBottom={10}
-            inputLabel="Confirm Password"
-            value={form.confirmPassword}
-            onChange={handleChange('confirmPassword')}
-            placeholder="Confirm Password"
-            secureTextEntry
-            textContentType="oneTimeCode"
-            autoComplete="off"
-            validateFor="confirmPassword"
-            compareWith={form.password}
-            isRequired
             isLastField
             onSubmitEditing={handleRegistration}
           />
@@ -244,7 +219,7 @@ export default function RegisterScreen() {
         link="Login"
         linkText="Already have an account?"
         onLinkPress={navigateBack}
-        bottom={moderateScale(8)}
+        bottom={moderateScale(16)}
       />
     </>
   );

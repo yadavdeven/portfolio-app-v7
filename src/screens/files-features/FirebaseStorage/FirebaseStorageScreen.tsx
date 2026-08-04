@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useFocusEffect } from '@react-navigation/native';
 import { moderateScale } from 'react-native-size-matters';
 import {
   pick,
@@ -15,24 +15,15 @@ import {
   isErrorWithCode,
   errorCodes,
 } from '@react-native-documents/picker';
-import {
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
-import FileViewer from 'react-native-file-viewer';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { requestCameraPermission } from '../../../utils/permissions';
+import FileViewer from 'react-native-file-viewer';
 
 // Provided by React Native's runtime but not in this project's TS lib config.
 declare const requestIdleCallback: (
   callback: () => void,
   options?: { timeout?: number },
 ) => number;
-import Wrapper from '../../../components/common/Wrapper';
-import Colors from '../../../constants/Colors';
-import FolderOpenSvg from '../../../assets/svgs/folder_open_24dp_300.svg';
-import SearchSvg from '../../../assets/svgs/search_24dp_300.svg';
-import MoreVertSvg from '../../../assets/svgs/more_vert_24dp_300.svg';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
   bootstrapDrive,
   createFolder,
@@ -43,20 +34,24 @@ import {
   navigateToCrumb,
   renameNode,
 } from '../../../store/slices/driveSlice';
-import { useToast } from '../../../providers/ToastProvider';
-import { DriveNode } from '../../../types/drive';
-import Breadcrumb from './components/Breadcrumb';
-import Controls from './components/Controls';
+import UploadReviewModal, { PickedFile } from './components/UploadReviewModal';
+import FolderOpenSvg from '../../../assets/svgs/folder_open_24dp_300.svg';
+import MoreVertSvg from '../../../assets/svgs/more_vert_24dp_300.svg';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import SearchSvg from '../../../assets/svgs/search_24dp_300.svg';
 import CreateFolderModal from './components/CreateFolderModal';
-import RenameModal from './components/RenameModal';
 import MediaPickerSheet from './components/MediaPickerSheet';
-import UploadReviewModal, {
-  PickedFile,
-} from './components/UploadReviewModal';
-import DriveItemRow from './components/DriveItemRow';
-import FabMenu from './components/FabMenu';
+import { useToast } from '../../../providers/ToastProvider';
+import Wrapper from '../../../components/common/Wrapper';
 import { downloadDriveFile } from './downloadDriveFile';
 import { styles } from './FirebaseStorageScreen.styles';
+import DriveItemRow from './components/DriveItemRow';
+import RenameModal from './components/RenameModal';
+import Breadcrumb from './components/Breadcrumb';
+import { DriveNode } from '../../../types/drive';
+import Colors from '../../../constants/Colors';
+import Controls from './components/Controls';
+import FabMenu from './components/FabMenu';
 
 const FirebaseStorageScreen = () => {
   const dispatch = useAppDispatch();
@@ -76,7 +71,9 @@ const FirebaseStorageScreen = () => {
   const [pickedFiles, setPickedFiles] = useState<PickedFile[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   // Download-and-open state: the modal is shown while `downloadingFile` is set.
-  const [downloadingFile, setDownloadingFile] = useState<DriveNode | null>(null);
+  const [downloadingFile, setDownloadingFile] = useState<DriveNode | null>(
+    null,
+  );
   const [downloadPercent, setDownloadPercent] = useState(0);
   // Toast queued to fire only once the modal has fully closed.
   const [pendingToast, setPendingToast] = useState<{
@@ -299,101 +296,101 @@ const FirebaseStorageScreen = () => {
         containerStyle={styles.content}
       >
         {rootLoading && (
-        <ActivityIndicator
-          size="large"
-          color={Colors.primary}
-          style={styles.center}
-        />
-      )}
+          <ActivityIndicator
+            size="large"
+            color={Colors.primary}
+            style={styles.center}
+          />
+        )}
 
-      {status === 'failed' && (
-        <View style={styles.center}>
-          <Text style={[styles.message, styles.error]}>{error}</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={retryRoot}>
-            <Text style={styles.retryText}>Retry</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {status === 'succeeded' && (
-        <Animated.View style={styles.fill} entering={FadeIn.duration(300)}>
-          {/* Active (current) folder row, above the breadcrumb. */}
-          <View style={styles.folderHeader}>
-            <View style={styles.accentBar} />
-            <FolderOpenSvg
-              width={moderateScale(24)}
-              height={moderateScale(24)}
-              fill={Colors.grey_primary}
-            />
-            <Text style={styles.activeFolder} numberOfLines={1}>
-              {currentName}
-            </Text>
-            <TouchableOpacity style={styles.headerIconBtn}>
-              <SearchSvg
-                width={moderateScale(25)}
-                height={moderateScale(25)}
-                fill={Colors.black}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.headerIconBtn}>
-              <MoreVertSvg
-                width={moderateScale(25)}
-                height={moderateScale(25)}
-                fill={Colors.black}
-              />
+        {status === 'failed' && (
+          <View style={styles.center}>
+            <Text style={[styles.message, styles.error]}>{error}</Text>
+            <TouchableOpacity style={styles.retryBtn} onPress={retryRoot}>
+              <Text style={styles.retryText}>Retry</Text>
             </TouchableOpacity>
           </View>
+        )}
 
-          <Breadcrumb
-            crumbs={breadcrumb}
-            onCrumbPress={index => dispatch(navigateToCrumb(index))}
-          />
-          <Controls />
-
-          {listStatus === 'loading' && (
-            <ActivityIndicator
-              size="large"
-              color={Colors.primary}
-              style={styles.center}
-            />
-          )}
-
-          {listStatus === 'failed' && (
-            <View style={styles.center}>
-              <Text style={[styles.message, styles.error]}>{listError}</Text>
-              <TouchableOpacity style={styles.retryBtn} onPress={retryList}>
-                <Text style={styles.retryText}>Retry</Text>
+        {status === 'succeeded' && (
+          <Animated.View style={styles.fill} entering={FadeIn.duration(300)}>
+            {/* Active (current) folder row, above the breadcrumb. */}
+            <View style={styles.folderHeader}>
+              <View style={styles.accentBar} />
+              <FolderOpenSvg
+                width={moderateScale(24)}
+                height={moderateScale(24)}
+                fill={Colors.grey_primary}
+              />
+              <Text style={styles.activeFolder} numberOfLines={1}>
+                {currentName}
+              </Text>
+              <TouchableOpacity style={styles.headerIconBtn}>
+                <SearchSvg
+                  width={moderateScale(25)}
+                  height={moderateScale(25)}
+                  fill={Colors.black}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.headerIconBtn}>
+                <MoreVertSvg
+                  width={moderateScale(25)}
+                  height={moderateScale(25)}
+                  fill={Colors.black}
+                />
               </TouchableOpacity>
             </View>
-          )}
 
-          {listStatus === 'succeeded' && (
-            <FlatList
-              data={items}
-              keyExtractor={item => item._id}
-              renderItem={({ item }) => (
-                <DriveItemRow
-                  item={item}
-                  onPress={handleOpenItem}
-                  onRename={handleRename}
-                  onDelete={handleDelete}
-                  downloading={downloadingFile?._id === item._id}
-                  percent={downloadPercent}
-                />
-              )}
-              contentContainerStyle={styles.list}
-              ListEmptyComponent={
-                <View style={styles.emptyWrap}>
-                  <Text style={styles.emptyTitle}>No files or folders</Text>
-                  <Text style={styles.emptySubtitle}>
-                    Tap + to create a folder or upload a file
-                  </Text>
-                </View>
-              }
+            <Breadcrumb
+              crumbs={breadcrumb}
+              onCrumbPress={index => dispatch(navigateToCrumb(index))}
             />
-          )}
-        </Animated.View>
-      )}
+            <Controls />
+
+            {listStatus === 'loading' && (
+              <ActivityIndicator
+                size="large"
+                color={Colors.primary}
+                style={styles.center}
+              />
+            )}
+
+            {listStatus === 'failed' && (
+              <View style={styles.center}>
+                <Text style={[styles.message, styles.error]}>{listError}</Text>
+                <TouchableOpacity style={styles.retryBtn} onPress={retryList}>
+                  <Text style={styles.retryText}>Retry</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {listStatus === 'succeeded' && (
+              <FlatList
+                data={items}
+                keyExtractor={item => item._id}
+                renderItem={({ item }) => (
+                  <DriveItemRow
+                    item={item}
+                    onPress={handleOpenItem}
+                    onRename={handleRename}
+                    onDelete={handleDelete}
+                    downloading={downloadingFile?._id === item._id}
+                    percent={downloadPercent}
+                  />
+                )}
+                contentContainerStyle={styles.list}
+                ListEmptyComponent={
+                  <View style={styles.emptyWrap}>
+                    <Text style={styles.emptyTitle}>No files or folders</Text>
+                    <Text style={styles.emptySubtitle}>
+                      Tap + to create a folder or upload a file
+                    </Text>
+                  </View>
+                }
+              />
+            )}
+          </Animated.View>
+        )}
       </Wrapper>
 
       <FabMenu

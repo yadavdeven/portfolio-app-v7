@@ -147,6 +147,10 @@ export const driveSlice = createSlice({
       .addCase(bootstrapDrive.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Failed to load Drive';
+        // `pending` also set listStatus to 'loading' (children load in the same
+        // pass). Clear it here so a failed bootstrap doesn't leave a phantom
+        // list-loading state behind the full-screen error.
+        state.listStatus = 'idle';
       })
       .addCase(fetchChildren.pending, state => {
         state.listStatus = 'loading';

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -54,7 +53,9 @@ const CONTACTS = [
   },
 ];
 
-export default function DrawerContent({ navigation }: DrawerContentComponentProps) {
+export default function DrawerContent({
+  navigation,
+}: DrawerContentComponentProps) {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
@@ -86,11 +87,8 @@ export default function DrawerContent({ navigation }: DrawerContentComponentProp
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={[Colors.primary_900, ALMOST_WHITE]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={[styles.header, { paddingTop: insets.top + moderateScale(24) }]}
+      <View
+        style={[styles.header, { marginTop: insets.top + moderateScale(16) }]}
       >
         <Image
           source={require('../../assets/images/global/profile_pic.jpeg')}
@@ -120,9 +118,8 @@ export default function DrawerContent({ navigation }: DrawerContentComponentProp
             </TouchableOpacity>
           ))}
         </View>
-      </LinearGradient>
-
-      <View style={styles.divider} />
+        <View style={styles.divider} />
+      </View>
 
       {/* Menu items will go here later. */}
 
@@ -168,9 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: ALMOST_WHITE,
   },
   header: {
-    paddingHorizontal: moderateScale(20),
-    paddingBottom: moderateScale(20),
-    alignItems: 'flex-start',
+    paddingHorizontal: moderateScale(16),
   },
   avatar: {
     width: moderateScale(72),
@@ -206,7 +201,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: moderateScale(0.8),
-    marginHorizontal: moderateScale(20),
+    marginTop: moderateScale(18),
     backgroundColor: Colors.primary_100,
   },
   bottom: {

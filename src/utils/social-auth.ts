@@ -1,4 +1,10 @@
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import {
+  getAuth,
+  signOut,
+  signInWithCredential,
+  GoogleAuthProvider,
+  FirebaseAuthTypes,
+} from '@react-native-firebase/auth';
 import {
   GoogleSignin,
   statusCodes,
@@ -36,7 +42,7 @@ export const signOutFromSocial = async (): Promise<void> => {
     console.log('Google sign-out skipped:', error);
   }
   try {
-    await auth().signOut();
+    await signOut(getAuth());
   } catch (error) {
     console.log('Firebase sign-out skipped:', error);
   }
@@ -75,11 +81,11 @@ export const signInWithGoogle =
       }
 
       // STAGE 5 — wrap Google's token in a Firebase credential (still no network).
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const googleCredential = GoogleAuthProvider.credential(idToken);
 
       // STAGE 6 — exchange it with Firebase. This creates/looks up the Firebase
       // user and returns a UserCredential (uid, isNewUser, getIdToken()).
-      return await auth().signInWithCredential(googleCredential);
+      return await signInWithCredential(getAuth(), googleCredential);
     } catch (error) {
       console.log('Google sign-in failed:', error);
       if (isErrorWithCode(error)) {

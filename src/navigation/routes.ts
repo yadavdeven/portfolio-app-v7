@@ -10,12 +10,10 @@ export const ROUTES = {
   CARDS_ROTATE: 'CardsRotateScreen',
   SCROLL_ANIMATION: 'ScrollAnimationScreen',
   FILE_SAVE_AND_DOWNLOAD: 'FileSaveAndDownloadScreen',
-  WELCOME_ALERT: 'WelcomeAlertScreen',
   BIOMETRICS: 'BiometricScreen',
   TEXT_EDITOR: 'TextEditorScreen',
   CHECKBOX_ANIMATION: 'CheckboxAnimationScreen',
   SELECT_DROPDOWNS: 'SelectDropdowns',
   SSL_PINNING: 'SSLPinningScreen',
-  DEVICE_INFO: 'DeviceInfoScreen',
   FIREBASE_STORAGE: 'FirebaseStorageScreen',
 } as const;
