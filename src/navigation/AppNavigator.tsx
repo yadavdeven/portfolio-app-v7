@@ -10,6 +10,7 @@ import CardsRotateScreen from '../screens/animations/CardsRotate/CardsRotateScre
 import TextEditorScreen from '../screens/features/text-editor/TextEditorScreen';
 import SSLPinningScreen from '../screens/features/ssl-pinning/SSLPinningScreen';
 import BiometricScreen from '../screens/features/biometrics/BiometricScreen';
+import ShowAlertScreen from '../screens/native-modules/ShowAlertScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import { ROUTES } from './routes';
 
@@ -43,6 +44,7 @@ export default function AppNavigator() {
         name={ROUTES.FIREBASE_STORAGE}
         component={FirebaseStorageScreen}
       />
+      <Stack.Screen name={ROUTES.SHOW_ALERT} component={ShowAlertScreen} />
     </Stack.Navigator>
   );
 }

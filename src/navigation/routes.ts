@@ -16,4 +16,5 @@ export const ROUTES = {
   SELECT_DROPDOWNS: 'SelectDropdowns',
   SSL_PINNING: 'SSLPinningScreen',
   FIREBASE_STORAGE: 'FirebaseStorageScreen',
+  SHOW_ALERT: 'ShowAlertScreen',
 } as const;

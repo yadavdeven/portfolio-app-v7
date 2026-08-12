@@ -9,4 +9,5 @@ export type AppStackParamList = {
   SelectDropdowns: undefined;
   SSLPinningScreen: undefined;
   FirebaseStorageScreen: undefined;
+  ShowAlertScreen: undefined;
 };
